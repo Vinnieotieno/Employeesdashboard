@@ -1,0 +1,23 @@
+.delivery{
+    display: flex;
+
+    .deliveryContainer{
+        flex: 6;
+
+        .deliveryDetails{
+            .widgets{
+                display: flex;
+                padding: 20px;
+                gap: 20px;
+
+                @media (min-width: 576px) and (max-width: 991.98px) {
+                    flex-wrap: wrap;
+                    justify-content: space-between;
+                }
+                @media (max-width: 575.98px) {
+                    flex-direction: column;
+                }
+            }
+        }
+    }
+}

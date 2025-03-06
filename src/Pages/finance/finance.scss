@@ -1,0 +1,44 @@
+.finance{
+    display: flex;
+
+    .financeContainer{
+        flex: 6;
+
+        .titleContainer{
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 20px;
+    
+            h4{
+                font-size: 22px;
+                color: #6439ff;
+                padding: 10px;
+            }
+            .links{
+              .link{
+                padding: 0 15px;
+                text-decoration: none;
+                color: #6439ff;
+              }
+            }
+          }
+      
+          .financeBodydetails {
+            background: url('../../static/finance.png');
+            height: 70vh;
+            background-size: contain;
+            background-repeat: no-repeat;
+            display: flex;
+            background-position: center center;
+            overflow-x: hidden;
+    
+            h3{
+                color: #6439ff;
+            }
+            p{
+                color: #777;
+            }
+            
+          }
+    }
+}

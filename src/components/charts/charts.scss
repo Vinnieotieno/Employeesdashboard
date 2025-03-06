@@ -1,0 +1,46 @@
+.chart{
+    flex: 4;
+    -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+    box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+    color: green;
+
+    .title{
+        margin-bottom: 20px;
+    }
+    .chartGrid{
+        stroke: lightgray;
+    }
+}
+.OrderChart{
+    margin: 20px 0;
+    padding: 20px 0;
+    height: 350px;
+    .chartContainer{
+        display: flex;
+        h4{
+            font-size: 19px;
+            color: #6439ff;
+            padding: 10px;
+        }
+        .sellingCities{
+            height: 370px;
+            padding: 30px 20px;
+            gap: 10px;
+            -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+            box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+        }
+        .inventory{
+            gap: 10px;
+            height: 370px;
+            -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+            box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+        }
+
+        @media (min-width: 576px) and (max-width: 991.98px) {
+            flex-direction: column;
+        }
+        @media (max-width: 575.98px) {
+            flex-direction: column;
+        }
+    }
+}

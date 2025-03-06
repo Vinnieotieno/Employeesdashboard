@@ -1,0 +1,147 @@
+.navigation {
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease;
+
+  &.darkmode {
+    background-color: #1a1a1a;
+    color: #f0f0f0;
+
+    .navbar-brand,
+    .nav-link,
+    .search-input {
+      color: #f0f0f0 !important;
+    }
+
+    .toggle-button {
+      background-color: #333;
+      border-color: #555;
+    }
+  }
+
+  .navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+  }
+
+  .navbar-toggler {
+    border: none;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    color: #555;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #007bff;
+    }
+
+    svg {
+      font-size: 1.25rem;
+    }
+  }
+
+  .search {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    &.show {
+      .search-input {
+        width: 200px;
+        padding: 0.375rem 0.75rem;
+        opacity: 1;
+      }
+    }
+
+    .search-input {
+      width: 0;
+      padding: 0;
+      border: none;
+      border-radius: 20px;
+      background-color: #f0f0f0;
+      transition: all 0.3s ease;
+      opacity: 0;
+
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+      }
+    }
+  }
+
+  .search-toggle {
+    cursor: pointer;
+  }
+
+  .profile {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .username {
+      font-weight: 500;
+      display: none;
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  .navigation {
+    .profile {
+      .username {
+        display: inline;
+      }
+    }
+
+    .search {
+      &.show {
+        .search-input {
+          width: 300px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 991px) {
+  .navigation {
+    .navbar-collapse {
+      background-color: inherit;
+      padding: 1rem;
+      margin-top: 0.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-item {
+      padding: 0.75rem 0;
+    }
+
+    .search {
+      order: -1;
+      width: 100%;
+      margin-bottom: 1rem;
+
+      &.show {
+        .search-input {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,115 @@
+.profile{
+    display: flex;
+    overflow-x: hidden;
+
+    .profileContainer{
+        flex: 6;
+
+        .userDetailsContainer{
+            display: flex;
+            margin: 10px 0;
+
+            .profileInfo{
+                flex: 3;
+                padding: 20px;
+                -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+                box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+                justify-content: center;
+                align-items: center;
+                position: relative;
+
+                .editButton{
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    padding: 5px 20px;
+                    font-size: 12px;
+                    color: #7451f8;
+                    cursor: pointer;
+                    background-color: #7551f84c ;
+                    border-radius: 0px 0px 0px 5px;
+                }
+
+                .detailsContainer{
+                    padding: 20px 0;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+                @media (min-width: 576px) and (max-width: 991.98px) {
+                    flex: 2;
+                }
+                @media (max-width: 575.98px) {
+                    flex: 2;
+                }
+            }
+            .otherDetails{
+                position: relative;
+                flex: 6;
+                padding: 20px;
+                -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+                box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+
+
+                .linksContainer{
+                    display: flex;
+                    justify-content: space-between;
+
+                    .link{
+                        display: flex;
+                        justify-content: space-around;
+                        text-decoration: none;
+                        color: #777;
+                    }
+                    @media (min-width: 576px) and (max-width: 991.98px) {
+                        .linktext{
+                            display: none;
+                        }
+                    }
+                    @media (max-width: 575.98px) {
+                        .linktext{
+                            display: none;
+                        }
+
+                    }
+                }
+                .otherDetailsContainer{
+                    margin: 15px 0px;
+                    .details{
+                        padding: 20px;
+                        h4{
+                            color: #6439ff;
+                            padding: 10px;
+                            margin: 20px 0;
+                            font-size: 17px;
+                            -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+                            box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+                        }
+                        .contactDetailsText{
+                            color: #777;
+                        }
+                        .button{
+                            text-decoration: none;
+                            color: #6439ff;
+                            padding: 8px 13px;
+                            width: fit-content;
+                            height: 50px;
+                            border: 1px solid #6439ff;
+                            border-radius: 10px;
+                            background-color: #9999996b;
+                        }
+                    }
+                }
+            }
+
+            @media (min-width: 576px) and (max-width: 991.98px) {
+                flex-direction: column;
+                gap: 10px;
+            }
+            @media (max-width: 575.98px) {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    }
+}

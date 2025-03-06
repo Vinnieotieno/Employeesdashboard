@@ -1,0 +1,23 @@
+.chat{
+    display: flex;
+
+    .chatContainer{
+        flex: 6;
+
+        .chatDetails{
+            .chatBody{
+                display: flex;
+                justify-content: space-between;
+
+                .sidebarChat{
+                    flex: 2;
+                }
+                .chatScreen{
+                    flex: 6;
+                    justify-content: center;
+                    align-items: center;
+                }
+            }
+        }
+    }
+}

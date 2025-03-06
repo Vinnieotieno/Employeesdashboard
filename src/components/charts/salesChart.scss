@@ -1,0 +1,21 @@
+.salesCharts{
+    margin: 20px 0;
+    .chartsContainer{
+        display: flex;
+
+        h4{
+            font-size: 19px;
+            color: #6439ff;
+            padding: 10px;
+        }
+
+        @media (min-width: 576px) and (max-width: 991.98px) {
+            flex-direction: column;
+            align-items: center;
+          }
+          @media (max-width: 575.98px) {
+            flex-direction: column;
+            align-items: center;
+          }
+    }
+}

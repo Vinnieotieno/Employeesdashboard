@@ -1,0 +1,27 @@
+.AllPlans{
+    display: flex;
+
+
+    .AllPlansBody{
+        flex: 6;
+
+        .titleContainer{
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 20px;
+    
+            h4{
+                font-size: 22px;
+                color: #6439ff;
+                padding: 10px;
+            }
+            .links{
+              .link{
+                padding: 0 15px;
+                text-decoration: none;
+                color: #6439ff;
+              }
+            }
+          }
+    }
+}

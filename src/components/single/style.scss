@@ -1,0 +1,107 @@
+.singleservice{
+    display: flex;
+
+    .singleserviceDetails{
+        flex: 6;
+    }
+
+    .newItems{
+        .top,
+            .bottom {
+              -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+              box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+              padding: 15px;
+              margin: 20px;
+              display: flex;
+              justify-content: space-between;
+        
+              h1 {
+                color: #6439ff;
+                font-size: 20px;
+              }
+
+              .creatorDetails{
+                -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+              box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+              padding: 15px;
+              margin: 20px;
+              }
+
+              .documentsUploads{
+                padding: 0 20px;
+
+                .checkboxes{
+                  margin: 0 30px;
+                  transform: scale(1.5);
+
+                  &:checked {
+                  background-color: #6439ff; 
+                  border-color: #6439ff; 
+                  color: #6439ff; 
+                }
+              }
+              }
+        
+            }
+      
+      }
+}
+.singlePlan{
+  display: flex;
+
+  .singlePlanBody{
+    flex: 6;
+
+    .top,
+            .bottom {
+              -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+              box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+              padding: 15px;
+              margin: 20px;
+              display: flex;
+              justify-content: space-between;
+        
+              h1 {
+                color: #6439ff;
+                font-size: 20px;
+              }
+
+              .creatorDetails{
+                -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+              box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+              padding: 15px;
+              margin: 20px;
+              }
+        
+            }
+  }
+}
+.singleInventory{
+  display: flex;
+
+  .singleInventoryBody{
+    flex: 6;
+
+    .bottom {
+      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+      padding: 15px;
+      margin: 20px;
+      display: flex;
+      justify-content: space-between;
+
+      h1 {
+        color: #6439ff;
+        font-size: 20px;
+      }
+
+      .creatorDetails{
+        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+      padding: 15px;
+      margin: 20px;
+      }
+
+    }
+  }
+}
