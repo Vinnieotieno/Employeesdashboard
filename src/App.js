@@ -31,6 +31,7 @@ import SingleInventory from './components/single/SingleInventory';
 import Calender from './Pages/calender/Calender';
 import Leave from './Pages/management/Leave';
 import PaymentReport from './Pages/payment/PaymentReport';
+import LeaveDashboard from './Pages/leave/LeaveDashboard';
 
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [currentRoom, setCurrentRoom] = useState([]);
+ 
 
   return (
     <div className={darkMode ? "app dark darkmode" : "app"}>
@@ -104,6 +106,7 @@ function App() {
         <Route path='stats' element={<Stats/>}/>
         <Route path='predictions' element={<Predictions/>}/>
         <Route path='payment' element={<PaymentReport />} />
+        <Route path="/leave-dashboard" element={<LeaveDashboard />} />
         </Route>
         </Route>
     </Routes>

@@ -1,46 +1,332 @@
-.chart{
-    flex: 4;
-    -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-    box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
-    color: green;
+$primary-color: #86c517;
+$primary-dark: darken($primary-color, 10%);
+$primary-light: lighten($primary-color, 30%);
 
-    .title{
-        margin-bottom: 20px;
+.chart {
+  flex: 4;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, $primary-color 0%, $primary-dark 50%, $primary-color 100%);
+    background-size: 200% 100%;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+  
+  &:hover {
+    box-shadow: 0 15px 40px rgba(134, 197, 23, 0.12);
+    transform: translateY(-2px);
+  }
+
+  .title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 24px;
+    position: relative;
+    padding-left: 16px;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 24px;
+      background: $primary-color;
+      border-radius: 2px;
     }
-    .chartGrid{
-        stroke: lightgray;
+  }
+  
+  .chartGrid {
+    stroke: #f0f0f0 !important;
+    stroke-dasharray: 3 3;
+  }
+  
+  // Recharts customization
+  .recharts-wrapper {
+    margin: 0 -10px;
+  }
+  
+  .recharts-cartesian-axis-tick-value {
+    fill: #666;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .recharts-tooltip-wrapper {
+    .recharts-default-tooltip {
+      background: rgba(255, 255, 255, 0.95) !important;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(134, 197, 23, 0.2) !important;
+      border-radius: 12px !important;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1) !important;
+      padding: 12px 16px !important;
+      
+      .recharts-tooltip-label {
+        color: #333 !important;
+        font-weight: 600 !important;
+        margin-bottom: 8px !important;
+      }
+      
+      .recharts-tooltip-item {
+        color: $primary-color !important;
+        font-weight: 500 !important;
+      }
     }
+  }
+  
+  .recharts-area {
+    .recharts-area-area {
+      fill: url(#total) !important;
+    }
+    
+    .recharts-area-curve {
+      stroke: $primary-color !important;
+      stroke-width: 3;
+    }
+  }
+  
+  .recharts-dot {
+    fill: $primary-color !important;
+    stroke: #fff !important;
+    stroke-width: 2;
+    r: 5 !important;
+    
+    &:hover {
+      r: 7 !important;
+    }
+  }
 }
-.OrderChart{
-    margin: 20px 0;
-    padding: 20px 0;
-    height: 350px;
-    .chartContainer{
-        display: flex;
-        h4{
-            font-size: 19px;
-            color: #6439ff;
-            padding: 10px;
-        }
-        .sellingCities{
-            height: 370px;
-            padding: 30px 20px;
-            gap: 10px;
-            -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-            box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
-        }
-        .inventory{
-            gap: 10px;
-            height: 370px;
-            -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-            box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
-        }
 
-        @media (min-width: 576px) and (max-width: 991.98px) {
-            flex-direction: column;
-        }
-        @media (max-width: 575.98px) {
-            flex-direction: column;
-        }
+// OrderChart styles
+.OrderChart {
+  margin: 40px 0;
+  padding: 0 40px;
+  
+  .chartContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      
+      svg {
+        color: $primary-color;
+        font-size: 28px;
+      }
+      
+      i {
+        font-style: normal;
+        color: $primary-color;
+        font-weight: 500;
+      }
     }
+    
+    p {
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      font-size: 0.875rem;
+    }
+    
+    .sellingCities,
+    .inventory {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, $primary-color, $primary-dark, $primary-color);
+        border-radius: 20px;
+        opacity: 0;
+        z-index: -1;
+        transition: opacity 0.3s ease;
+      }
+      
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(134, 197, 23, 0.15);
+        
+        &::after {
+          opacity: 0.1;
+        }
+      }
+    }
+    
+    // Recharts bar customization
+    .recharts-bar-rectangle {
+      transition: all 0.3s ease;
+      
+      &:hover {
+        opacity: 0.8;
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+// Dark Mode
+.dark-mode {
+  .chart {
+    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    
+    .title {
+      color: #fff;
+    }
+    
+    .chartGrid {
+      stroke: #333 !important;
+    }
+    
+    .recharts-cartesian-axis-tick-value {
+      fill: #aaa;
+    }
+    
+    .recharts-tooltip-wrapper {
+      .recharts-default-tooltip {
+        background: rgba(45, 45, 45, 0.95) !important;
+        border: 1px solid rgba(134, 197, 23, 0.3) !important;
+        
+        .recharts-tooltip-label {
+          color: #fff !important;
+        }
+      }
+    }
+  }
+  
+  .OrderChart {
+    .chartContainer {
+      h4 {
+        color: #fff;
+      }
+      
+      p {
+        color: #aaa;
+      }
+      
+      .sellingCities,
+      .inventory {
+        background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 1200px) {
+  .OrderChart {
+    .chartContainer {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .chart {
+    padding: 20px;
+    
+    .title {
+      font-size: 1.125rem;
+      margin-bottom: 20px;
+    }
+  }
+  
+  .OrderChart {
+    margin: 20px 0;
+    padding: 0 20px;
+    
+    .chartContainer {
+      gap: 20px;
+      
+      .sellingCities,
+      .inventory {
+        padding: 20px;
+      }
+      
+      h4 {
+        font-size: 1.125rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .chart {
+    padding: 16px;
+    
+    .title {
+      font-size: 1rem;
+      padding-left: 12px;
+      
+      &::before {
+        width: 3px;
+        height: 20px;
+      }
+    }
+  }
+  
+  .OrderChart {
+    .chartContainer {
+      grid-template-columns: 1fr;
+      
+      .sellingCities,
+      .inventory {
+        padding: 16px;
+      }
+      
+      h4 {
+        font-size: 1rem;
+        
+        svg {
+          font-size: 24px;
+        }
+      }
+      
+      p {
+        font-size: 0.75rem;
+      }
+    }
+  }
 }
