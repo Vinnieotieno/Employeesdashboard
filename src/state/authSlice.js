@@ -11,8 +11,13 @@ const authSlice = createSlice({
     initialState,
     reducers:{
         setCredentials: (state, action) =>{
-            state.userInfo = action.payload;
-            localStorage.setItem('userInfo', JSON.stringify(action.payload))
+            // Add login timestamp to track token expiration
+            const userInfoWithTimestamp = {
+                ...action.payload,
+                loginTime: new Date().toISOString()
+            };
+            state.userInfo = userInfoWithTimestamp;
+            localStorage.setItem('userInfo', JSON.stringify(userInfoWithTimestamp))
         },
         logout: (state, action) =>{
             state.userInfo = null;

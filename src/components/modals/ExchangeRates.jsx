@@ -12,14 +12,13 @@ const ExchangeRates = () => {
     const [EUR, setEUR] = useState('')
     const [validated, setValidated] = useState(false);
     const [postExchangeRates, ] = usePostExchangeRatesMutation()
-    const {data, isLoading, refetch} = useGetExchangeRatesQuery()
+    const {data, isLoading} = useGetExchangeRatesQuery()
 
     if(isLoading || !data){
         <Loader/>
     }
 
     useEffect(() => {
-        refetch();
         if (data?.length > 0) {
             setUSD(data[0]?.USD);
             setPound(data[0]?.Pound);

@@ -1,0 +1,349 @@
+// ===================================
+// GLOBAL RESPONSIVE DESIGN SYSTEM
+// ===================================
+
+// Breakpoints
+$breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+);
+
+// Media Query Mixins
+@mixin media-breakpoint-up($name) {
+  $min: map-get($breakpoints, $name);
+  @if $min != 0 {
+    @media (min-width: $min) {
+      @content;
+    }
+  } @else {
+    @content;
+  }
+}
+
+@mixin media-breakpoint-down($name) {
+  $max: map-get($breakpoints, $name) - 0.02;
+  @media (max-width: $max) {
+    @content;
+  }
+}
+
+@mixin media-breakpoint-between($lower, $upper) {
+  $min: map-get($breakpoints, $lower);
+  $max: map-get($breakpoints, $upper) - 0.02;
+  
+  @if $min != 0 {
+    @media (min-width: $min) and (max-width: $max) {
+      @content;
+    }
+  } @else {
+    @media (max-width: $max) {
+      @content;
+    }
+  }
+}
+
+// Container Responsive Widths
+.container-responsive {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+
+  @include media-breakpoint-up(sm) {
+    max-width: 540px;
+  }
+
+  @include media-breakpoint-up(md) {
+    max-width: 720px;
+  }
+
+  @include media-breakpoint-up(lg) {
+    max-width: 960px;
+  }
+
+  @include media-breakpoint-up(xl) {
+    max-width: 1140px;
+  }
+
+  @include media-breakpoint-up(xxl) {
+    max-width: 1320px;
+  }
+}
+
+// Responsive Grid System
+.row-responsive {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+}
+
+.col-responsive {
+  position: relative;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+// Column Classes
+@each $breakpoint in map-keys($breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: if($breakpoint == xs, "", "-#{$breakpoint}");
+    
+    @for $i from 1 through 12 {
+      .col#{$infix}-#{$i} {
+        flex: 0 0 percentage($i / 12);
+        max-width: percentage($i / 12);
+      }
+    }
+    
+    .col#{$infix} {
+      flex-basis: 0;
+      flex-grow: 1;
+      max-width: 100%;
+    }
+    
+    .col#{$infix}-auto {
+      flex: 0 0 auto;
+      width: auto;
+      max-width: 100%;
+    }
+  }
+}
+
+// Responsive Spacing Utilities
+$spacers: (
+  0: 0,
+  1: 0.25rem,
+  2: 0.5rem,
+  3: 1rem,
+  4: 1.5rem,
+  5: 3rem
+);
+
+$properties: (
+  m: margin,
+  p: padding
+);
+
+$sides: (
+  t: top,
+  b: bottom,
+  l: left,
+  r: right,
+  x: (left, right),
+  y: (top, bottom)
+);
+
+// Generate spacing utilities for each breakpoint
+@each $breakpoint in map-keys($breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: if($breakpoint == xs, "", "-#{$breakpoint}");
+    
+    @each $prop, $abbrev in $properties {
+      @each $size, $length in $spacers {
+        .#{$abbrev}#{$infix}-#{$size} {
+          #{$prop}: $length !important;
+        }
+        
+        @each $side, $sides in $sides {
+          @if type-of($sides) == "list" {
+            @each $s in $sides {
+              .#{$abbrev}#{$side}#{$infix}-#{$size} {
+                #{$prop}-#{$s}: $length !important;
+              }
+            }
+          } @else {
+            .#{$abbrev}#{$side}#{$infix}-#{$size} {
+              #{$prop}-#{$sides}: $length !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive Display Utilities
+$displays: none, inline, inline-block, block, table, table-row, table-cell, flex, inline-flex;
+
+@each $breakpoint in map-keys($breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: if($breakpoint == xs, "", "-#{$breakpoint}");
+    
+    @each $value in $displays {
+      .d#{$infix}-#{$value} {
+        display: $value !important;
+      }
+    }
+  }
+}
+
+// Responsive Text Alignment
+$text-align: left, right, center, justify;
+
+@each $breakpoint in map-keys($breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: if($breakpoint == xs, "", "-#{$breakpoint}");
+    
+    @each $value in $text-align {
+      .text#{$infix}-#{$value} {
+        text-align: $value !important;
+      }
+    }
+  }
+}
+
+// Responsive Flexbox Utilities
+@each $breakpoint in map-keys($breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: if($breakpoint == xs, "", "-#{$breakpoint}");
+    
+    .flex#{$infix}-row { flex-direction: row !important; }
+    .flex#{$infix}-column { flex-direction: column !important; }
+    .flex#{$infix}-row-reverse { flex-direction: row-reverse !important; }
+    .flex#{$infix}-column-reverse { flex-direction: column-reverse !important; }
+    
+    .flex#{$infix}-wrap { flex-wrap: wrap !important; }
+    .flex#{$infix}-nowrap { flex-wrap: nowrap !important; }
+    .flex#{$infix}-wrap-reverse { flex-wrap: wrap-reverse !important; }
+    
+    .justify-content#{$infix}-start { justify-content: flex-start !important; }
+    .justify-content#{$infix}-end { justify-content: flex-end !important; }
+    .justify-content#{$infix}-center { justify-content: center !important; }
+    .justify-content#{$infix}-between { justify-content: space-between !important; }
+    .justify-content#{$infix}-around { justify-content: space-around !important; }
+    
+    .align-items#{$infix}-start { align-items: flex-start !important; }
+    .align-items#{$infix}-end { align-items: flex-end !important; }
+    .align-items#{$infix}-center { align-items: center !important; }
+    .align-items#{$infix}-baseline { align-items: baseline !important; }
+    .align-items#{$infix}-stretch { align-items: stretch !important; }
+  }
+}
+
+// Responsive Width Utilities
+$widths: (
+  25: 25%,
+  50: 50%,
+  75: 75%,
+  100: 100%,
+  auto: auto
+);
+
+@each $breakpoint in map-keys($breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: if($breakpoint == xs, "", "-#{$breakpoint}");
+    
+    @each $prop, $abbrev in (width: w, height: h) {
+      @each $size, $length in $widths {
+        .#{$abbrev}#{$infix}-#{$size} {
+          #{$prop}: $length !important;
+        }
+      }
+    }
+  }
+}
+
+// Responsive Typography
+@each $breakpoint in map-keys($breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: if($breakpoint == xs, "", "-#{$breakpoint}");
+    
+    .fs#{$infix}-1 { font-size: 2.5rem !important; }
+    .fs#{$infix}-2 { font-size: 2rem !important; }
+    .fs#{$infix}-3 { font-size: 1.75rem !important; }
+    .fs#{$infix}-4 { font-size: 1.5rem !important; }
+    .fs#{$infix}-5 { font-size: 1.25rem !important; }
+    .fs#{$infix}-6 { font-size: 1rem !important; }
+  }
+}
+
+// Mobile-First Base Styles
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  
+  @include media-breakpoint-down(md) {
+    font-size: 14px;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+// Responsive Images
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+// Responsive Tables
+.table-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  
+  table {
+    min-width: 100%;
+    
+    @include media-breakpoint-down(md) {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+// Hide/Show utilities for different screen sizes
+.d-mobile-only {
+  @include media-breakpoint-up(md) {
+    display: none !important;
+  }
+}
+
+.d-tablet-up {
+  @include media-breakpoint-down(md) {
+    display: none !important;
+  }
+}
+
+.d-desktop-only {
+  @include media-breakpoint-down(lg) {
+    display: none !important;
+  }
+}
+
+// Responsive Card Layouts
+.card-responsive {
+  margin-bottom: 1rem;
+  
+  @include media-breakpoint-down(md) {
+    margin-bottom: 0.75rem;
+  }
+}
+
+// Responsive Button Sizes
+.btn-responsive {
+  @include media-breakpoint-down(md) {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+
+// Responsive Form Controls
+.form-control-responsive {
+  @include media-breakpoint-down(md) {
+    font-size: 16px; // Prevents zoom on iOS
+  }
+}

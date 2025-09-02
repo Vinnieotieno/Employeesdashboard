@@ -8,15 +8,14 @@ import KeyboardArrowUpOutlinedIcon from "@mui/icons-material/KeyboardArrowUpOutl
 import  {useGetOrdersQuery, useGetExchangeRatesQuery} from '../../state/servicesApiSlice'
 
 const Featured = () => {
-    const {data, isLoading, refetch} = useGetOrdersQuery()
+    const {data, isLoading} = useGetOrdersQuery()
     const [dailyRevenue, setDailyRevenue] = useState(0)
     const [weeklyRevenue, setWeeklyRevenue] = useState(0)
     const [monthlyRevenue, setMonthlyRevenue] = useState(0)
     const [exchangeRates, setExchangeRates] = useState({});
     const { data:ExchangeRateData, isLoading:Loading, refetch: updating} = useGetExchangeRatesQuery();
-    
+
     useEffect(() =>{
-        refetch()
         if(!isLoading && data){
             const CurrentDate = new Date();
             const oneDay = 24 * 60 * 1000;

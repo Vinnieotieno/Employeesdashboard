@@ -11,12 +11,7 @@ const Row2 = () => {
   const { data: productData } = useGetProductsQuery();
   const pieColors = ['aqua', 'rgba(127, 255, 212, 0.553)'];
 
-  const {data, isLoading, refetch} = useGetOrdersQuery()
-
-  useEffect(() =>{
-    refetch()
-
-  },[data])
+  const {data, isLoading} = useGetOrdersQuery()
 
   if(isLoading  || !data){
     return <Loader/>

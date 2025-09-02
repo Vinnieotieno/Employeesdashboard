@@ -38,6 +38,44 @@ export const serviceApiSlice = apiSlice.injectEndpoints({
                 body: data,
             })
         }),
+        // Operations Board API endpoints
+        getOperationsBoard: builder.query({
+            query: (params = {}) => {
+                const queryString = new URLSearchParams(params).toString();
+                return `service/operations-board${queryString ? `?${queryString}` : ''}`;
+            },
+            providesTags: ['OperationsBoard'],
+        }),
+        updateOrderStatus: builder.mutation({
+            query: ({ id, ...data }) => ({
+                url: `service/operations/${id}/status`,
+                method: 'PUT',
+                body: data,
+            }),
+            invalidatesTags: ['OperationsBoard', 'Services'],
+        }),
+        markAsDelivered: builder.mutation({
+            query: ({ id, ...data }) => ({
+                url: `service/operations/${id}/delivered`,
+                method: 'PUT',
+                body: data,
+            }),
+            invalidatesTags: ['OperationsBoard', 'Services'],
+        }),
+        generateOperationsReport: builder.query({
+            query: (params = {}) => {
+                const queryString = new URLSearchParams(params).toString();
+                return `service/operations/reports${queryString ? `?${queryString}` : ''}`;
+            },
+        }),
+        updateShipmentTracking: builder.mutation({
+            query: ({ id, ...data }) => ({
+                url: `service/operations/${id}/tracking`,
+                method: 'PUT',
+                body: data,
+            }),
+            invalidatesTags: ['OperationsBoard', 'Services'],
+        }),
         deleteOrAbortQuote: builder.mutation({
             query: (data) => ({
                 url: 'service/delete/',
@@ -114,6 +152,12 @@ export const {
     useUpdateServiceMutation,
     useSendQuoteMutation,
     useUploadQuoteDocumentMutation,
+    // Operations Board API hooks
+    useGetOperationsBoardQuery,
+    useUpdateOrderStatusMutation,
+    useMarkAsDeliveredMutation,
+    useGenerateOperationsReportQuery,
+    useUpdateShipmentTrackingMutation,
     useDeleteOrAbortQuoteMutation,
     usePostExchangeRatesMutation,
     useGetExchangeRatesQuery,
@@ -123,6 +167,6 @@ export const {
     useGetSingleInventoryQuery,
     useUpdateInventoryMutation,
     useAssignDriverMutation,
-    useCalculateDriverPaymentMutation, // ✅ Fixed missing comma
-    useGetDriverPaymentsQuery 
+    useCalculateDriverPaymentMutation,
+    useGetDriverPaymentsQuery
 } = serviceApiSlice;

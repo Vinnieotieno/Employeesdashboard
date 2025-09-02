@@ -1,16 +1,25 @@
-// Variables
-$primary-color: #86c517;
-$primary-dark: darken($primary-color, 10%);
-$primary-light: lighten($primary-color, 40%);
+// Import responsive utilities
+@import '../../style/responsive.scss';
+
+// Variables - Updated with Company Brand Color #88C300
+$primary-color: #88C300;
+$primary-dark: darken($primary-color, 15%);
+$primary-light: lighten($primary-color, 35%);
+$primary-gradient: linear-gradient(135deg, #88C300 0%, #9ED500 100%);
 $sidebar-bg: #ffffff;
 $sidebar-dark-bg: #1a1a1a;
 $text-primary: #2d3748;
 $text-secondary: #718096;
 $border-color: #e2e8f0;
-$hover-bg: rgba(134, 197, 23, 0.08);
-$active-bg: rgba(134, 197, 23, 0.12);
+$hover-bg: rgba(136, 195, 0, 0.08);
+$active-bg: rgba(136, 195, 0, 0.12);
+$accent-gradient: linear-gradient(45deg, #88C300, #A0D911, #88C300);
+
+// Remove mobile menu toggle and overlay from sidebar
+// These are now handled by MobileNav component
 
 .sidebar {
+  // Desktop styles (default)
   flex: 0 0 260px;
   width: 260px;
   min-height: 100vh;
@@ -23,35 +32,84 @@ $active-bg: rgba(134, 197, 23, 0.12);
   left: 0;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 100;
+
+  // Tablet styles
+  @include media-breakpoint-between(md, lg) {
+    flex: 0 0 80px;
+    width: 80px;
+  }
+
+  // Mobile styles
+  @include media-breakpoint-down(md) {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 280px;
+    height: 100vh;
+    z-index: 1000;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+    transition: left 0.3s ease;
+
+    &.mobile-open {
+      left: 0;
+    }
+  }
   
   &.collapsed {
     flex: 0 0 80px;
     width: 80px;
-    
+
+    @include media-breakpoint-down(md) {
+      // On mobile, collapsed state doesn't apply
+      flex: 0 0 280px;
+      width: 280px;
+    }
+
     .sidebar-header {
       padding: 20px 16px;
-      
+
       .logo {
         display: none;
+
+        @include media-breakpoint-down(md) {
+          display: flex; // Show logo on mobile even when collapsed
+        }
       }
     }
-    
+
     .section-title {
       display: none;
+
+      @include media-breakpoint-down(md) {
+        display: block; // Show section titles on mobile
+      }
     }
-    
+
     .nav-section ul li {
       a, .expandable-trigger {
         padding: 16px;
         justify-content: center;
-        
+
+        @include media-breakpoint-down(md) {
+          justify-content: flex-start; // Left align on mobile
+          padding: 16px 24px;
+        }
+
         span, .badge {
           display: none;
+
+          @include media-breakpoint-down(md) {
+            display: inline; // Show text on mobile
+          }
         }
       }
-      
+
       &.menu-item .sub-menu {
         display: none;
+
+        @include media-breakpoint-down(md) {
+          display: block; // Show submenus on mobile
+        }
       }
     }
     
@@ -77,6 +135,14 @@ $active-bg: rgba(134, 197, 23, 0.12);
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    @include media-breakpoint-down(md) {
+      padding: 20px;
+    }
+
+    @include media-breakpoint-down(sm) {
+      padding: 16px;
+    }
     
     .logo {
       display: flex;
@@ -84,14 +150,31 @@ $active-bg: rgba(134, 197, 23, 0.12);
       gap: 12px;
       text-decoration: none;
       color: $text-primary;
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 700;
       transition: all 0.3s ease;
-      
+      padding: 4px 0;
+
       .logo-icon {
         color: $primary-color;
-        font-size: 32px;
-        animation: rotate 20s linear infinite;
+        font-size: 2rem;
+        filter: drop-shadow(0 2px 4px rgba(136, 195, 0, 0.3));
+        animation: logoGlow 4s ease-in-out infinite;
+      }
+
+      span {
+        background: $primary-gradient;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.5px;
+      }
+
+      &:hover {
+        .logo-icon {
+          transform: scale(1.05);
+          filter: drop-shadow(0 4px 8px rgba(136, 195, 0, 0.4));
+        }
       }
       
       span {
@@ -106,6 +189,62 @@ $active-bg: rgba(134, 197, 23, 0.12);
       }
     }
     
+    // Desktop sidebar toggle
+    .sidebar-toggle {
+      background: transparent;
+      border: none;
+      color: $text-secondary;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      @include media-breakpoint-down(lg) {
+        display: none;
+      }
+
+      &:hover {
+        background: $hover-bg;
+        color: $primary-color;
+        transform: scale(1.05);
+      }
+
+      svg {
+        font-size: 24px;
+      }
+    }
+
+    // Mobile close button
+    .mobile-close {
+      background: transparent;
+      border: none;
+      color: $text-secondary;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      display: none;
+      align-items: center;
+      justify-content: center;
+
+      @include media-breakpoint-down(md) {
+        display: flex;
+      }
+
+      &:hover {
+        background: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+      }
+
+      svg {
+        font-size: 24px;
+      }
+    }
+
+    // Legacy menu-toggle (keeping for compatibility)
     .menu-toggle {
       background: transparent;
       border: none;
@@ -117,13 +256,13 @@ $active-bg: rgba(134, 197, 23, 0.12);
       display: flex;
       align-items: center;
       justify-content: center;
-      
+
       &:hover {
         background: $hover-bg;
         color: $primary-color;
         transform: scale(1.05);
       }
-      
+
       svg {
         font-size: 24px;
       }
@@ -135,6 +274,10 @@ $active-bg: rgba(134, 197, 23, 0.12);
     overflow-y: auto;
     overflow-x: hidden;
     padding: 20px 0;
+
+    @include media-breakpoint-down(md) {
+      padding: 16px 0;
+    }
     
     &::-webkit-scrollbar {
       width: 6px;
@@ -176,7 +319,11 @@ $active-bg: rgba(134, 197, 23, 0.12);
         li {
           position: relative;
           margin: 0 12px 4px;
-          
+
+          @include media-breakpoint-down(md) {
+            margin: 0 8px 4px;
+          }
+
           a, .expandable-trigger {
             display: flex;
             align-items: center;
@@ -189,6 +336,16 @@ $active-bg: rgba(134, 197, 23, 0.12);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+
+            @include media-breakpoint-down(md) {
+              padding: 14px 20px;
+              gap: 18px;
+            }
+
+            @include media-breakpoint-down(sm) {
+              padding: 12px 16px;
+              gap: 16px;
+            }
             
             &::before {
               content: '';
@@ -511,9 +668,193 @@ $active-bg: rgba(134, 197, 23, 0.12);
   }
 }
 
+// Attribution Section Styles
+.sidebar-attribution {
+  margin-top: auto;
+  padding: 16px 20px 20px;
+  border-top: 1px solid $border-color;
+
+  .company-branding {
+    position: relative;
+    background: linear-gradient(135deg, #f8fffe 0%, #f0fff4 100%);
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid rgba(136, 195, 0, 0.2);
+    overflow: hidden;
+
+    .brand-accent {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: $accent-gradient;
+      animation: brandPulse 3s ease-in-out infinite;
+    }
+
+    .attribution-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+
+      .company-info {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        color: $text-primary;
+        font-weight: 700;
+        margin-bottom: 8px;
+
+        .company-icon {
+          font-size: 1.2rem;
+          color: $primary-color;
+        }
+
+        span {
+          background: $primary-gradient;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          letter-spacing: -0.3px;
+        }
+      }
+
+      .update-date {
+        font-size: 0.75rem;
+        color: $text-secondary;
+        font-style: italic;
+        opacity: 0.8;
+      }
+    }
+
+    // Subtle background pattern
+    &::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(136, 195, 0, 0.05) 0%, transparent 70%);
+      animation: backgroundFloat 6s ease-in-out infinite;
+    }
+  }
+}
+
+// Enhanced theme switcher with company colors
+.theme-switcher {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 8px;
+  background: rgba(136, 195, 0, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(136, 195, 0, 0.1);
+
+  .theme-btn {
+    flex: 1;
+    background: transparent;
+    border: 1px solid rgba(136, 195, 0, 0.2);
+    color: $text-secondary;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background: rgba(136, 195, 0, 0.1);
+      border-color: $primary-color;
+      color: $primary-color;
+      transform: translateY(-1px);
+    }
+
+    &.active {
+      background: $primary-gradient;
+      border-color: $primary-color;
+      color: white;
+      box-shadow: 0 2px 8px rgba(136, 195, 0, 0.3);
+    }
+
+    svg {
+      font-size: 1.1rem;
+    }
+  }
+}
+
+// Animations
+@keyframes brandPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scaleY(0.95);
+  }
+}
+
+@keyframes backgroundFloat {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(10px, -10px) rotate(120deg);
+  }
+  66% {
+    transform: translate(-5px, 5px) rotate(240deg);
+  }
+}
+
+@keyframes logoGlow {
+  0%, 100% {
+    filter: drop-shadow(0 2px 4px rgba(136, 195, 0, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 2px 8px rgba(136, 195, 0, 0.5));
+  }
+}
+
+
+
+@keyframes logoGlow {
+  0%, 100% {
+    filter: drop-shadow(0 2px 4px rgba(136, 195, 0, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 2px 8px rgba(136, 195, 0, 0.5));
+  }
+}
+
 @media (max-width: 575.98px) {
   .sidebar {
     width: 100%;
     flex: 0 0 100%;
+
+    .sidebar-attribution {
+      padding: 12px 16px 16px;
+
+      .company-branding {
+        padding: 12px;
+
+        .attribution-content {
+          .developer-name {
+            font-size: 0.85rem;
+          }
+
+          .company-info {
+            font-size: 0.75rem;
+          }
+
+          .update-date {
+            font-size: 0.65rem;
+          }
+        }
+      }
+    }
   }
 }

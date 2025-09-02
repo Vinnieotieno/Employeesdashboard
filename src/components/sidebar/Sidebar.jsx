@@ -24,43 +24,74 @@ import AirIcon from "@mui/icons-material/Air"
 import MenuIcon from "@mui/icons-material/Menu"
 import CloseIcon from "@mui/icons-material/Close"
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp"
+
 import PaymentIcon from "@mui/icons-material/Payment"
 import GroupWorkIcon from "@mui/icons-material/GroupWork"
 import LightModeIcon from "@mui/icons-material/LightMode"
+import AssessmentIcon from '@mui/icons-material/Assessment'
 import DarkModeIcon from "@mui/icons-material/DarkMode"
 
-const Sidebar = () => {
+const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen, isMobile: propIsMobile }) => {
   const [showText, setShowText] = useState(true)
+  const [isCollapsed, setIsCollapsed] = useState(false)
   const { dispatch } = useContext(DarkModeContext)
   const [showMenu, setShowMenu] = useState(false)
   const location = useLocation()
   const { userInfo } = useSelector((state) => state.auth)
+
+  // Responsive breakpoints
+  const mediaQueryMobile = useMediaQuery("(max-width: 767.98px)")
+  const isTablet = useMediaQuery("(min-width: 768px) and (max-width: 991.98px)")
+  const isDesktop = useMediaQuery("(min-width: 992px)")
+
+  // Use prop if provided, otherwise use media query
+  const isMobile = propIsMobile !== undefined ? propIsMobile : mediaQueryMobile
+
+  const logoutDispatch = useDispatch()
+  const navigate = useNavigate()
+  const [logoutApiCall] = useLogoutMutation()
+
+  // Handle responsive behavior
+  useEffect(() => {
+    if (isMobile) {
+      setShowText(true) // Always show text on mobile when menu is open
+      setIsCollapsed(false)
+    } else if (isTablet) {
+      setShowText(false) // Collapsed sidebar on tablet
+      setIsCollapsed(true)
+    } else if (isDesktop) {
+      setShowText(true) // Full sidebar on desktop
+      setIsCollapsed(false)
+    }
+  }, [isMobile, isTablet, isDesktop])
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    if (isMobile && setIsMobileMenuOpen) {
+      setIsMobileMenuOpen(false)
+    }
+  }, [location.pathname, isMobile, setIsMobileMenuOpen])
+
+  // Toggle desktop sidebar collapse
+  const toggleSidebarCollapse = () => {
+    if (isDesktop) {
+      setIsCollapsed(!isCollapsed)
+      setShowText(!isCollapsed)
+    }
+  }
+
+  // Don't render if userInfo is null (during logout/authentication)
+  if (!userInfo) {
+    return null;
+  }
+
   const isStatsPage = location.pathname === "/stats"
 
-  const isMediumScreen = useMediaQuery("(min-width: 576px) and (max-width: 991.98px)")
-  const isSmallScreen = useMediaQuery("(max-width: 575.98px)")
 
-  const toggleText = () => {
-    setShowText((prevShowText) => !prevShowText)
-  }
 
   const toggleMenu = () => {
     setShowMenu(!showMenu)
   }
-
-  useEffect(() => {
-    if (isMediumScreen || isSmallScreen) {
-      setShowText(false)
-    } else {
-      setShowText(true)
-    }
-  }, [isMediumScreen, isSmallScreen])
-
-  const logoutDispatch = useDispatch()
-  const navigate = useNavigate()
-
-  const [logoutApiCall] = useLogoutMutation()
 
   const logoutHandler = async () => {
     try {
@@ -75,7 +106,7 @@ const Sidebar = () => {
   const isActive = (path) => location.pathname === path
 
   return (
-    <div className={`sidebar ${!showText ? "collapsed" : ""}`}>
+    <div className={`sidebar ${isCollapsed ? "collapsed" : ""} ${isMobile ? "mobile" : ""} ${isMobile && isMobileMenuOpen ? "mobile-open" : ""}`}>
       <div className="sidebar-header">
         {showText && (
           <Link to="/dashboard" className="logo">
@@ -83,9 +114,20 @@ const Sidebar = () => {
             <span>GlobeFlight</span>
           </Link>
         )}
-        <button className="menu-toggle" onClick={toggleText}>
-          {showText ? <CloseIcon /> : <MenuIcon />}
-        </button>
+
+        {/* Desktop Toggle Button */}
+        {isDesktop && (
+          <button className="sidebar-toggle" onClick={toggleSidebarCollapse}>
+            {isCollapsed ? <MenuIcon /> : <CloseIcon />}
+          </button>
+        )}
+
+        {/* Mobile Close Button */}
+        {isMobile && setIsMobileMenuOpen && (
+          <button className="mobile-close" onClick={() => setIsMobileMenuOpen(false)}>
+            <CloseIcon />
+          </button>
+        )}
       </div>
       
       <div className="sidebar-content">
@@ -157,6 +199,18 @@ const Sidebar = () => {
                   {showText && <span>Orders</span>}
                 </Link>
               </li>
+              <li className={isActive("/operations/board") ? "active" : ""}>
+                <Link to="/operations/board">
+                  <DashboardIcon className="icon" />
+                  {showText && <span>Operations Board</span>}
+                </Link>
+              </li>
+              <li className={isActive("/operations/reports") ? "active" : ""}>
+                <Link to="/operations/reports">
+                  <AssessmentIcon className="icon" />
+                  {showText && <span>Operations Reports</span>}
+                </Link>
+              </li>
               <li className={isActive("/sales/orders/dump") ? "active" : ""}>
                 <Link to="/sales/orders/dump">
                   <StoreIcon className="icon" />
@@ -175,7 +229,7 @@ const Sidebar = () => {
           <div className="nav-section">
             <div className="section-title">Analytics & Tools</div>
             <ul>
-              {(userInfo.department === "Finance" || userInfo.department === "Management") && (
+              {(userInfo?.department === "Finance" || userInfo?.department === "Management") && (
                 <li className={isActive("/stats") ? "active" : ""}>
                   <Link to="/stats">
                     <InsertChartIcon className="icon" />
@@ -247,20 +301,38 @@ const Sidebar = () => {
         
         {showText && (
           <div className="theme-switcher">
-            <button 
-              className="theme-btn light" 
+            <button
+              className="theme-btn light"
               onClick={() => dispatch({ type: "LIGHT" })}
               title="Light Mode"
             >
               <LightModeIcon />
             </button>
-            <button 
-              className="theme-btn dark" 
+            <button
+              className="theme-btn dark"
               onClick={() => dispatch({ type: "DARK" })}
               title="Dark Mode"
             >
               <DarkModeIcon />
             </button>
+          </div>
+        )}
+
+        {/* Company Branding Section */}
+        {showText && (
+          <div className="sidebar-attribution">
+            <div className="company-branding">
+              <div className="brand-accent"></div>
+              <div className="attribution-content">
+                <div className="company-info">
+                  <GroupWorkIcon className="company-icon" />
+                  <span>GlobeFlight Logistics</span>
+                </div>
+                <div className="update-date">
+                  <span>Enhanced {new Date().toLocaleDateString()}</span>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>

@@ -12,17 +12,15 @@ import Loader from '../Loader';
 import { Link } from 'react-router-dom';
 
 const Widget = ({type}) => {
-  const {data:users, isLoading, refetch} = useGetUsersQuery()
+  const {data:users, isLoading} = useGetUsersQuery()
   const {data:drivers} = useGetDriversQuery()
-  const {data:orders, isLoading:loadingOrders, refetch:lookagain} = useGetOrdersQuery()
+  const {data:orders, isLoading:loadingOrders} = useGetOrdersQuery()
   const [exchangeRates, setExchangeRates] = useState({});
-  const { data:ExchangeRateData, isLoading:Loading, refetch: updating} = useGetExchangeRatesQuery();
+  const { data:ExchangeRateData, isLoading:Loading} = useGetExchangeRatesQuery();
 
- 
+
 
   useEffect(() => {
-    refetch();
-    updating()
     if(ExchangeRateData?.length > 0){
       const formattedExchangeRates = {
         USD: ExchangeRateData[0]?.USD || 0,
@@ -31,7 +29,7 @@ const Widget = ({type}) => {
       };
       setExchangeRates(formattedExchangeRates);
     }
-  }, [users, ExchangeRateData, orders]);
+  }, [ExchangeRateData]);
 
   if (isLoading || !users || !orders || loadingOrders) {
     return <Loader/>;

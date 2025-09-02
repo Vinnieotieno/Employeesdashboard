@@ -36,8 +36,8 @@ const Sales = () => {
   const [fromDate, setFromDate] = useState('')
   const [toDate, setToDate] = useState('')
   const {userInfo} = useSelector(state => state.auth)
-  const { data, isLoading, refetch} = useGetOrdersQuery();
-  const { data:ExchangeRateData, isLoading:Loading, refetch: updating} = useGetExchangeRatesQuery();
+  const { data, isLoading} = useGetOrdersQuery();
+  const { data:ExchangeRateData, isLoading:Loading} = useGetExchangeRatesQuery();
   const [showCustom, setShowCustom] = useState(false);
   const [exchangeRates, setExchangeRates] = useState({});
   const shouldHideDiv = isSmallScreen || isMediumScreen;
@@ -48,9 +48,6 @@ const Sales = () => {
   }
 
   useEffect(() => {
-    refetch();
-    updating()
-
     if(ExchangeRateData?.length > 0){
       const formattedExchangeRates = {
         USD: ExchangeRateData[0]?.USD || 0,
@@ -60,7 +57,7 @@ const Sales = () => {
       setExchangeRates(formattedExchangeRates);
     }
 
-  }, [data, ExchangeRateData]);
+  }, [ExchangeRateData]);
 
   if (isLoading || !data) {
     return <Loader />;

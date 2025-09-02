@@ -1,19 +1,22 @@
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import { useGetOrdersQuery, useChangeProgressMutation } from '../../state/servicesApiSlice';
 import { DataGrid } from '@mui/x-data-grid';
 import Loader from '../Loader'
-import  {Row, Col} from 'react-bootstrap'
+import  {Row, Col, Button} from 'react-bootstrap'
 import { toast } from 'react-toastify';
 import {useSelector} from 'react-redux'
 import {Link, useParams} from 'react-router-dom'
 import AutoModeOutlinedIcon from '@mui/icons-material/AutoModeOutlined';
 import RequestQuoteOutlinedIcon from '@mui/icons-material/RequestQuoteOutlined';
+import ProgressManagementModal from '../modals/ProgressManagementModal';
 
 const Progression = () => {
     const { data, isLoading, refetch} = useGetOrdersQuery();
     const [changeProgress] = useChangeProgressMutation()
     const {userInfo} = useSelector(state => state.auth)
     const params = useParams()
+    const [showProgressModal, setShowProgressModal] = useState(false);
+    const [selectedOrder, setSelectedOrder] = useState(null);
 
     
 
@@ -73,25 +76,77 @@ const Progression = () => {
         },
         {
             field: "action",
-            headerName: "Action",
-            width: 110,
+            headerName: "Quick Action",
+            width: 150,
             renderCell: (params) => {
-              if (params.row.progress === "On Transit") {
+              if (params.row.progress === "Initial") {
                 return (
-                  <button className="btn btn-warning" onClick={() => handleAction(params.id)}>Cleared</button>
+                  <button className="btn btn-primary btn-sm" onClick={() => handleInitialToTransit(params.id)}>
+                    Start Transit
+                  </button>
+                );
+              } else if (params.row.progress === "On Transit") {
+                return (
+                  <button className="btn btn-warning btn-sm" onClick={() => handleTransitToArrived(params.id)}>
+                    Mark Arrived
+                  </button>
+                );
+              } else if (params.row.progress === "Arrived") {
+                return (
+                  <button className="btn btn-info btn-sm" onClick={() => handleArrivedToClearance(params.id)}>
+                    Start Clearance
+                  </button>
                 );
               } else if (params.row.progress === "Clearance") {
                 return (
-                  <button className="btn btn-success" onClick={() => handleClearance(params.id)}>Delivered</button>
+                  <button className="btn btn-success btn-sm" onClick={() => handleClearanceToDelivery(params.id)}>
+                    Mark Delivered
+                  </button>
                 );
               } else {
-                return null; // Return null for other progress values or add another case if needed
+                return null;
               }
+            },
+          },
+          {
+            field: "manage",
+            headerName: "Manage",
+            width: 120,
+            renderCell: (params) => {
+              return (
+                <Button
+                  variant="outline-primary"
+                  size="sm"
+                  onClick={() => handleManageProgress(params.row)}
+                >
+                  Manage
+                </Button>
+              );
             },
           },
       ];
 
-      const handleAction = async(id) => {
+      const handleInitialToTransit = async(id) => {
+        const Progress = 'On Transit'
+        await changeProgress({Progress, id}).unwrap().then(res =>{
+            toast.success(res?.message)
+            refetch()
+        }).catch(err =>{
+            toast.error(err?.message || err?.data?.message)
+        })
+      };
+
+      const handleTransitToArrived = async(id) => {
+        const Progress = 'Arrived'
+        await changeProgress({Progress, id}).unwrap().then(res =>{
+            toast.success(res?.message)
+            refetch()
+        }).catch(err =>{
+            toast.error(err?.message || err?.data?.message)
+        })
+      };
+
+      const handleArrivedToClearance = async(id) => {
         const Progress = 'Clearance'
         await changeProgress({Progress, id}).unwrap().then(res =>{
             toast.success(res?.message)
@@ -101,7 +156,7 @@ const Progression = () => {
         })
       };
 
-      const handleClearance = async(id) => {
+      const handleClearanceToDelivery = async(id) => {
         const Progress = 'Delivery'
         await changeProgress({Progress, id}).unwrap().then(res =>{
             toast.success(res?.message)
@@ -109,6 +164,19 @@ const Progression = () => {
         }).catch(err =>{
             toast.error(err?.message || err?.data?.message)
         })
+      };
+
+      const handleManageProgress = (orderRow) => {
+        // Find the full order data
+        const fullOrderData = data.find(order => order._id === orderRow.id);
+        setSelectedOrder(fullOrderData);
+        setShowProgressModal(true);
+      };
+
+      const handleProgressUpdate = () => {
+        refetch();
+        setShowProgressModal(false);
+        setSelectedOrder(null);
       };
       
 
@@ -129,8 +197,11 @@ const Progression = () => {
     destination: item.destination,
     progress:item.progress
   }));
-  const expectedAirShip = rows.filter((item) => item.progress === "On Transit" && item.service === "Air Freight");
-  const expectedSeaShip = rows.filter(item => item.progress === "On Transit" && item.service === "Sea Freight")
+  const initialOrders = rows.filter(item => item.progress === "Initial")
+  const transitAirShip = rows.filter((item) => item.progress === "On Transit" && item.service === "Air Freight");
+  const transitSeaShip = rows.filter(item => item.progress === "On Transit" && item.service === "Sea Freight")
+  const arrivedAirShip = rows.filter((item) => item.progress === "Arrived" && item.service === "Air Freight");
+  const arrivedSeaShip = rows.filter(item => item.progress === "Arrived" && item.service === "Sea Freight")
   const clearedAirShip = rows.filter((item) => item.progress === "Clearance" && item.service === "Air Freight");
   const clearedSeaShip = rows.filter(item => item.progress === "Clearance" && item.service === "Sea Freight")
   const deliveredShipments = rows.filter(item => item.progress === "Delivery" )
@@ -144,36 +215,71 @@ const Progression = () => {
                     <Link to='/sales/progression/delivered'  className='link'><AutoModeOutlinedIcon/> Delivered Orders</Link>
                 </div>}
                 </div>
-        { params.delivered !== 'delivered'  && <><Row className ="mt-5">
-            <Col md={6}>
+        { params.delivered !== 'delivered'  && <>
+        {/* Initial Orders Section */}
+        <Row className ="mt-5">
+            <Col md={12}>
             <div className="">
-                <h3 className="text-center" style={{color:'#6439ff', fontSize:"22px"}}>Expected Air Shipment</h3>
+                <h3 className="text-center" style={{color:'#6439ff', fontSize:"22px"}}>Initial Orders (Ready to Start Transit)</h3>
                 <div style={{ height: 400, width: '100%' }}>
-                <DataGrid rows={expectedAirShip} columns={columns} pageSize={5} />
-                </div>
-            </div>
-            </Col>                
-            <Col md={6}>
-            <div className="">
-                <h3 className="text-center" style={{color:'#6439ff', fontSize:"22px"}}>Expected Sea Shipment</h3>
-                <div style={{ height: 400, width: '100%' }}>
-                <DataGrid rows={expectedSeaShip} columns={columns} pageSize={5} />
+                <DataGrid rows={initialOrders} columns={columns} pageSize={5} />
                 </div>
             </div>
             </Col>
         </Row>
+
+        {/* On Transit Section */}
         <Row className ="mt-5">
             <Col md={6}>
             <div className="">
-                <h3 className="text-center" style={{color:'#6439ff', fontSize:"22px"}}>Clearance Shipment By Air</h3>
+                <h3 className="text-center" style={{color:'#6439ff', fontSize:"22px"}}>In Transit - Air Freight</h3>
+                <div style={{ height: 400, width: '100%' }}>
+                <DataGrid rows={transitAirShip} columns={columns} pageSize={5} />
+                </div>
+            </div>
+            </Col>
+            <Col md={6}>
+            <div className="">
+                <h3 className="text-center" style={{color:'#6439ff', fontSize:"22px"}}>In Transit - Sea Freight</h3>
+                <div style={{ height: 400, width: '100%' }}>
+                <DataGrid rows={transitSeaShip} columns={columns} pageSize={5} />
+                </div>
+            </div>
+            </Col>
+        </Row>
+
+        {/* Arrived Section */}
+        <Row className ="mt-5">
+            <Col md={6}>
+            <div className="">
+                <h3 className="text-center" style={{color:'#6439ff', fontSize:"22px"}}>Arrived - Air Freight</h3>
+                <div style={{ height: 400, width: '100%' }}>
+                <DataGrid rows={arrivedAirShip} columns={columns} pageSize={5} />
+                </div>
+            </div>
+            </Col>
+            <Col md={6}>
+            <div className="">
+                <h3 className="text-center" style={{color:'#6439ff', fontSize:"22px"}}>Arrived - Sea Freight</h3>
+                <div style={{ height: 400, width: '100%' }}>
+                <DataGrid rows={arrivedSeaShip} columns={columns} pageSize={5} />
+                </div>
+            </div>
+            </Col>
+        </Row>
+        {/* Clearance Section */}
+        <Row className ="mt-5">
+            <Col md={6}>
+            <div className="">
+                <h3 className="text-center" style={{color:'#6439ff', fontSize:"22px"}}>Clearance - Air Freight</h3>
                 <div style={{ height: 400, width: '100%' }}>
                 <DataGrid rows={clearedAirShip} columns={columns} pageSize={5} />
                 </div>
             </div>
-            </Col>                
+            </Col>
             <Col md={6}>
             <div className="">
-                <h3 className="text-center" style={{color:'#6439ff', fontSize:"22px"}}>Clearance Shipment By Sea </h3>
+                <h3 className="text-center" style={{color:'#6439ff', fontSize:"22px"}}>Clearance - Sea Freight</h3>
                 <div style={{ height: 400, width: '100%' }}>
                 <DataGrid rows={clearedSeaShip} columns={columns} pageSize={5} />
                 </div>
@@ -188,6 +294,14 @@ const Progression = () => {
                 </div>
             </div>
         </>}
+
+        {/* Progress Management Modal */}
+        <ProgressManagementModal
+            show={showProgressModal}
+            onHide={() => setShowProgressModal(false)}
+            orderData={selectedOrder}
+            onProgressUpdate={handleProgressUpdate}
+        />
     </div>
   )
 }

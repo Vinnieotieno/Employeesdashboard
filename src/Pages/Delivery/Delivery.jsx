@@ -9,12 +9,8 @@ import Loader from '../../components/Loader'
 import { useNavigate } from 'react-router-dom'
 
 const Delivery = () => {
-  const { data, isLoading, refetch} = useGetOrdersQuery();
+  const { data, isLoading} = useGetOrdersQuery();
   const navigate = useNavigate()
-
-  useEffect(() =>{
-    refetch()
-  },[data])
 
   if(isLoading || !data){
     return <Loader/>

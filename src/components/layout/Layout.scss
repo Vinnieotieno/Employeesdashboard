@@ -1,0 +1,104 @@
+// Import responsive utilities
+@import '../../style/responsive.scss';
+
+// Variables
+$primary-color: #88C300;
+$primary-dark: darken($primary-color, 15%);
+
+.layout {
+  display: flex;
+  overflow-x: hidden;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+
+  @include media-breakpoint-down(md) {
+    flex-direction: column;
+  }
+
+  // Mobile Menu Toggle Button
+  .mobile-menu-toggle {
+    position: fixed !important;
+    top: 15px !important;
+    left: 15px !important;
+    z-index: 1001 !important;
+    background: $primary-color !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(136, 195, 0, 0.3);
+    transition: all 0.3s ease;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+
+    @include media-breakpoint-up(md) {
+      display: none !important;
+    }
+
+    @include media-breakpoint-down(md) {
+      display: flex !important;
+    }
+
+    &:hover {
+      background: $primary-dark;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(136, 195, 0, 0.4);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    svg {
+      font-size: 24px;
+    }
+  }
+
+  // Mobile Overlay
+  .mobile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    backdrop-filter: blur(2px);
+    
+    @include media-breakpoint-up(md) {
+      display: none;
+    }
+  }
+
+  // Main Content Area
+  .main-content {
+    flex: 1;
+    width: 100%;
+    min-width: 0; // Prevent flex item from overflowing
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    @include media-breakpoint-down(md) {
+      margin-left: 0;
+      width: 100%;
+    }
+
+    .page-content {
+      padding: 0;
+      width: 100%;
+      min-height: calc(100vh - 70px);
+
+      @include media-breakpoint-down(md) {
+        padding-top: 60px; // Account for mobile menu toggle
+        min-height: calc(100vh - 130px);
+      }
+    }
+  }
+}

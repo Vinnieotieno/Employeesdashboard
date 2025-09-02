@@ -1,3 +1,6 @@
+// Import responsive utilities
+@import '../../style/responsive.scss';
+
 // Variables
 $primary-color: #86c517;
 $primary-dark: darken($primary-color, 10%);
@@ -8,23 +11,31 @@ $card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 $card-hover-shadow: 0 15px 40px rgba(134, 197, 23, 0.2);
 
 .home {
-  display: flex;
-  overflow-x: hidden;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  min-height: 100vh;
+  // Home-specific styles (layout styles are now in Layout component)
 
-  .homeContainer {
-    flex: 6;
-    position: relative;
-    overflow-y: auto;
-    
-    // Hero Section
-    .hero-section {
+  @include media-breakpoint-down(lg) {
+    // Any home-specific responsive adjustments
+  }
+
+  // Hero Section
+  .hero-section {
       background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
       color: white;
       padding: 60px 40px;
       position: relative;
       overflow: hidden;
+
+      @include media-breakpoint-down(lg) {
+        padding: 40px 30px;
+      }
+
+      @include media-breakpoint-down(md) {
+        padding: 30px 20px;
+      }
+
+      @include media-breakpoint-down(sm) {
+        padding: 20px 15px;
+      }
       
       &::before {
         content: '';
@@ -41,13 +52,30 @@ $card-hover-shadow: 0 15px 40px rgba(134, 197, 23, 0.2);
         position: relative;
         z-index: 2;
         max-width: 600px;
-        
+
+        @include media-breakpoint-down(md) {
+          max-width: 100%;
+          text-align: center;
+        }
+
         .hero-title {
           font-size: 3rem;
           font-weight: 700;
           margin-bottom: 1rem;
           animation: fadeInUp 0.8s ease-out;
-          
+
+          @include media-breakpoint-down(lg) {
+            font-size: 2.5rem;
+          }
+
+          @include media-breakpoint-down(md) {
+            font-size: 2rem;
+          }
+
+          @include media-breakpoint-down(sm) {
+            font-size: 1.75rem;
+          }
+
           .highlight {
             background: linear-gradient(45deg, #fff, $primary-light);
             -webkit-background-clip: text;
@@ -55,12 +83,20 @@ $card-hover-shadow: 0 15px 40px rgba(134, 197, 23, 0.2);
             background-clip: text;
           }
         }
-        
+
         .hero-subtitle {
           font-size: 1.2rem;
           opacity: 0.9;
           animation: fadeInUp 0.8s ease-out 0.2s;
           animation-fill-mode: both;
+
+          @include media-breakpoint-down(md) {
+            font-size: 1.1rem;
+          }
+
+          @include media-breakpoint-down(sm) {
+            font-size: 1rem;
+          }
         }
       }
       
@@ -69,6 +105,21 @@ $card-hover-shadow: 0 15px 40px rgba(134, 197, 23, 0.2);
         right: 5%;
         top: 50%;
         transform: translateY(-50%);
+
+        @include media-breakpoint-down(lg) {
+          position: static;
+          transform: none;
+          margin-top: 2rem;
+          display: flex;
+          justify-content: center;
+          gap: 1rem;
+          flex-wrap: wrap;
+        }
+
+        @include media-breakpoint-down(md) {
+          margin-top: 1.5rem;
+          gap: 0.75rem;
+        }
         
         .floating-card {
           background: rgba(255, 255, 255, 0.15);
@@ -81,39 +132,93 @@ $card-hover-shadow: 0 15px 40px rgba(134, 197, 23, 0.2);
           gap: 12px;
           position: absolute;
           animation: float 3s ease-in-out infinite;
-          
+
+          @include media-breakpoint-down(lg) {
+            position: static;
+            animation: none;
+            margin-bottom: 0;
+          }
+
+          @include media-breakpoint-down(md) {
+            padding: 12px 16px;
+            border-radius: 12px;
+          }
+
+          @include media-breakpoint-down(sm) {
+            padding: 10px 14px;
+            gap: 8px;
+          }
+
           &.card-1 {
             top: -40px;
             right: 0;
             animation-delay: 0s;
+
+            @include media-breakpoint-down(lg) {
+              top: auto;
+              right: auto;
+            }
           }
-          
+
           &.card-2 {
             top: 60px;
             right: 120px;
             animation-delay: 1s;
+
+            @include media-breakpoint-down(lg) {
+              top: auto;
+              right: auto;
+            }
           }
-          
+
           &.card-3 {
             top: 160px;
             right: 20px;
             animation-delay: 2s;
+
+            @include media-breakpoint-down(lg) {
+              top: auto;
+              right: auto;
+            }
           }
-          
+
           .card-icon {
             font-size: 24px;
             color: white;
+
+            @include media-breakpoint-down(sm) {
+              font-size: 20px;
+            }
           }
-          
+
           span {
             font-size: 14px;
             font-weight: 600;
             white-space: nowrap;
+
+            @include media-breakpoint-down(sm) {
+              font-size: 12px;
+            }
           }
         }
       }
     }
     
+    // Responsive Section Base
+    .responsive-section {
+      @include media-breakpoint-down(lg) {
+        padding: 30px 20px;
+      }
+
+      @include media-breakpoint-down(md) {
+        padding: 20px 15px;
+      }
+
+      @include media-breakpoint-down(sm) {
+        padding: 15px 10px;
+      }
+    }
+
     // Quick Stats Section
     .quick-stats {
       padding: 40px;
@@ -124,13 +229,32 @@ $card-hover-shadow: 0 15px 40px rgba(134, 197, 23, 0.2);
         justify-content: space-between;
         align-items: center;
         margin-bottom: 30px;
-        
+
+        @include media-breakpoint-down(md) {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1rem;
+          margin-bottom: 20px;
+        }
+
         h2 {
           font-size: 2rem;
           font-weight: 700;
           color: #333;
           position: relative;
-          
+
+          @include media-breakpoint-down(lg) {
+            font-size: 1.75rem;
+          }
+
+          @include media-breakpoint-down(md) {
+            font-size: 1.5rem;
+          }
+
+          @include media-breakpoint-down(sm) {
+            font-size: 1.25rem;
+          }
+
           &::after {
             content: '';
             position: absolute;
@@ -140,6 +264,11 @@ $card-hover-shadow: 0 15px 40px rgba(134, 197, 23, 0.2);
             height: 4px;
             background: $primary-color;
             border-radius: 2px;
+
+            @include media-breakpoint-down(sm) {
+              width: 40px;
+              height: 3px;
+            }
           }
         }
         
@@ -364,7 +493,6 @@ $card-hover-shadow: 0 15px 40px rgba(134, 197, 23, 0.2);
       }
     }
   }
-}
 
 // Animations
 @keyframes fadeInUp {
@@ -403,45 +531,43 @@ $card-hover-shadow: 0 15px 40px rgba(134, 197, 23, 0.2);
 .dark-mode {
   .home {
     background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-    
-    .homeContainer {
-      .quick-stats,
-      .action-cards {
+
+    .quick-stats,
+    .action-cards {
+      background: $dark-bg;
+
+      h2, h3, h4 {
+        color: white;
+      }
+
+      p {
+        color: #ccc;
+      }
+    }
+
+    .analytics-section {
+      background: #2d2d2d;
+
+      .featured-wrapper,
+      .chart-wrapper {
         background: $dark-bg;
-        
-        h2, h3, h4 {
+
+        h3 {
           color: white;
         }
-        
+      }
+    }
+
+    .action-card {
+      background: #2d2d2d;
+
+      &:not(.highlight-card) {
+        h4 {
+          color: white;
+        }
+
         p {
           color: #ccc;
-        }
-      }
-      
-      .analytics-section {
-        background: #2d2d2d;
-        
-        .featured-wrapper,
-        .chart-wrapper {
-          background: $dark-bg;
-          
-          h3 {
-            color: white;
-          }
-        }
-      }
-      
-      .action-card {
-        background: #2d2d2d;
-        
-        &:not(.highlight-card) {
-          h4 {
-            color: white;
-          }
-          
-          p {
-            color: #ccc;
-          }
         }
       }
     }
@@ -450,13 +576,13 @@ $card-hover-shadow: 0 15px 40px rgba(134, 197, 23, 0.2);
 
 // Responsive Design
 @media (max-width: 1200px) {
-  .home .homeContainer {
+  .home {
     .hero-section {
       .hero-visual {
         display: none;
       }
     }
-    
+
     .analytics-section .analytics-grid {
       grid-template-columns: 1fr;
     }
@@ -464,7 +590,7 @@ $card-hover-shadow: 0 15px 40px rgba(134, 197, 23, 0.2);
 }
 
 @media (max-width: 768px) {
-  .home .homeContainer {
+  .home {
     .hero-section {
       padding: 40px 20px;
       
@@ -508,11 +634,11 @@ $card-hover-shadow: 0 15px 40px rgba(134, 197, 23, 0.2);
 }
 
 @media (max-width: 480px) {
-  .home .homeContainer {
+  .home {
     .hero-section .hero-content .hero-title {
       font-size: 1.5rem;
     }
-    
+
     .quick-stats h2,
     .analytics-section h3,
     .action-cards h4 {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import Home from './Pages/home/Home'
 import Login from './Pages/login/Login'
@@ -7,6 +7,7 @@ import Stats from './Pages/stats/Stats'
 import Predictions from './Pages/predictions/Predictions'
 import New from './Pages/new/New'
 import './style/dark.scss'
+import './style/main.scss'
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import Sales from './Pages/Sales/Sales'
@@ -21,6 +22,9 @@ import Chat from './Pages/chat/Chat';
 import SingleService from './components/single/SingleService';
 import CustomerCare from './Pages/CustomerCare/CustomerCare';
 import Operations from './Pages/operations/Operations';
+import OperationsDashboard from './Pages/operations/OperationsDashboard';
+import OperationsBoard from './components/operations/OperationsBoard';
+import OperationsReports from './components/operations/OperationsReports';
 import Finance from './Pages/finance/Finance';
 import Warehouse from './Pages/warehouse/Warehouse';
 import Management from './Pages/management/Management';
@@ -55,7 +59,12 @@ function App() {
           {/* Private routes */}
         <Route path='dashboard' element={<Home/>}/>
         <Route path='customer-care' element={<CustomerCare/>}/>
-        <Route path='operations' element={<Operations/>}/>
+        <Route path='operations'>
+          <Route index element={<Operations/>}/>
+          <Route path='dashboard' element={<OperationsDashboard/>}/>
+          <Route path='board' element={<OperationsBoard/>}/>
+          <Route path='reports' element={<OperationsReports/>}/>
+        </Route>
         <Route path='finance' element={<Finance/>}/>
 
         <Route path='warehouse'>

@@ -7,14 +7,9 @@ import { useParams } from 'react-router-dom';
 import Orders from '../documents/Orders';
 
 const ServicesTable = () => {
-  const { data, isLoading, refetch} = useGetOrdersQuery();
+  const { data, isLoading} = useGetOrdersQuery();
   const navigate = useNavigate();
   const params = useParams()
-  
-
-  useEffect(() => {
-    refetch();
-  }, [data]);
   
   let columns = [
     {field: "createdBy",headerName: "Created By",width: 130,},

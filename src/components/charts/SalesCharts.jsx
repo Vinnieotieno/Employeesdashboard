@@ -30,15 +30,13 @@ const TriangleBar = (props) => {
   };
 
 const SalesCharts = ({data}) => {
-  const { data:ExchangeRateData, isLoading:Loading, refetch: updating} = useGetExchangeRatesQuery();
+  const { data:ExchangeRateData, isLoading:Loading} = useGetExchangeRatesQuery();
   const [fromSalesDate, setFromSalesDate] = useState('')
   const [toSalesDate, setToSalesDate] = useState('')
   const [exchangeRates, setExchangeRates] = useState({});
   const [showCustom, setShowCustom] = useState(false);
 
   useEffect(() => {
-    updating()
-
     if(ExchangeRateData?.length > 0){
       const formattedExchangeRates = {
         USD: ExchangeRateData[0]?.USD || 0,

@@ -19,6 +19,7 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import './leaveDashboard.scss';
+import { useGetLeaveQuery, useLeaveApplicationMutation, useApproveLeaveMutation, useGetLeaveBalanceQuery, useGetLeaveStatisticsQuery } from '../../state/usersApiSlice';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
@@ -40,9 +41,12 @@ const LeaveDashboard = () => {
     isEmergency: false
   });
 
-  // Mock data for now - replace with actual API calls
-  const [applications, setApplications] = useState([]);
-  const [balance, setBalance] = useState([]);
+  // Use actual API calls
+  const { data: applications = [], isLoading: applicationsLoading, refetch: refetchApplications } = useGetLeaveQuery();
+  const { data: balance = [], isLoading: balanceLoading, refetch: refetchBalance } = useGetLeaveBalanceQuery(userInfo._id);
+  const { data: statistics = {}, isLoading: statsLoading, refetch: refetchStats } = useGetLeaveStatisticsQuery();
+  const [leaveApplication] = useLeaveApplicationMutation();
+  const [approveLeave] = useApproveLeaveMutation();
   const [policies, setPolicies] = useState([
     { leaveType: 'Annual Leave', annualAllocation: 21, minNoticeDays: 7 },
     { leaveType: 'Sick Leave', annualAllocation: 10, minNoticeDays: 0 },
@@ -70,92 +74,78 @@ const LeaveDashboard = () => {
 
   // Fetch functions
   const fetchApplications = async () => {
-    // Replace with actual API call
-    // const response = await fetch('/api/leave/applications');
-    // setApplications(await response.json());
+    refetchApplications();
   };
 
   const fetchBalance = async () => {
-    // Replace with actual API call
-    // const response = await fetch('/api/leave/balance');
-    // setBalance(await response.json());
+    refetchBalance();
+    refetchStats();
   };
 
-  // Calculate statistics
-  const calculateStats = () => {
-    const stats = {
-      pending: 0,
-      approved: 0,
-      rejected: 0,
-      totalDays: 0
-    };
-    
-    applications.forEach(app => {
-      if (app.status === 'Pending') stats.pending++;
-      else if (['Approved', 'Auto-Approved'].includes(app.status)) {
-        stats.approved++;
-        stats.totalDays += app.numberOfDays;
-      }
-      else if (app.status === 'Rejected') stats.rejected++;
-    });
-    
-    return stats;
+  // Use real statistics from API
+  const stats = {
+    pending: statistics.pending || 0,
+    approved: statistics.approved || 0,
+    rejected: statistics.rejected || 0,
+    totalDays: statistics.totalDaysUsed || 0,
+    totalDaysPending: statistics.totalDaysPending || 0
   };
-
-  const stats = calculateStats();
 
   // Handle form submission
   const handleApplyLeave = async (e) => {
     e.preventDefault();
-    
+
     try {
-      // API call to apply leave
-      const response = await fetch('/api/leave/apply', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(leaveForm)
+      const leaveData = {
+        appliedBy: userInfo._id,
+        leaveType: leaveForm.leaveType,
+        startDate: leaveForm.startDate,
+        endDate: leaveForm.endDate,
+        reason: leaveForm.reason,
+        isEmergency: leaveForm.isEmergency
+      };
+
+      const result = await leaveApplication(leaveData).unwrap();
+
+      toast.success(result.message);
+      setShowApplyModal(false);
+      setLeaveForm({
+        leaveType: '',
+        startDate: '',
+        endDate: '',
+        reason: '',
+        isEmergency: false
       });
-      
-      const result = await response.json();
-      
-      if (response.ok) {
-        toast.success(result.message);
-        setShowApplyModal(false);
-        setLeaveForm({
-          leaveType: '',
-          startDate: '',
-          endDate: '',
-          reason: '',
-          isEmergency: false
-        });
-        fetchApplications();
-        fetchBalance();
-      } else {
-        toast.error(result.message);
+      fetchApplications();
+      fetchBalance();
+
+      // Send socket notification
+      if (socket) {
+        const message = `Leave application pending. From ${userInfo.username}. HR's response required.`;
+        const department = 'Management';
+        socket.emit('notification', message, userInfo, new Date().toLocaleTimeString(), new Date().toLocaleDateString(), department);
       }
     } catch (error) {
-      toast.error('Failed to apply leave');
+      toast.error(error?.data?.message || error?.message || 'Failed to apply leave');
     }
   };
 
   // Handle status update (for managers)
   const handleStatusUpdate = async (id, status, rejectionReason = '') => {
     try {
-      const response = await fetch('/api/leave/status', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, status, rejectionReason })
-      });
-      
-      if (response.ok) {
-        toast.success(`Leave ${status.toLowerCase()} successfully`);
-        fetchApplications();
-        setShowDetailsModal(false);
+      if (status === 'Approved') {
+        const result = await approveLeave({ id }).unwrap();
+        toast.success(result.message);
       } else {
-        toast.error('Failed to update status');
+        // TODO: Implement rejection API
+        toast.info('Rejection functionality not yet implemented');
+        return;
       }
+
+      fetchApplications();
+      setShowDetailsModal(false);
     } catch (error) {
-      toast.error('Failed to update status');
+      toast.error(error?.data?.message || error?.message || 'Failed to update status');
     }
   };
 
@@ -196,15 +186,26 @@ const LeaveDashboard = () => {
   ];
 
   const rows = applications.map((app, index) => ({
-    id: index + 1,
-    employee: app.appliedBy?.username || 'Unknown',
+    id: app._id || index + 1,
+    employee: app.appliedBy?.username || app.appliedBy?.fname || 'Unknown',
     leaveType: app.leaveType,
-    startDate: new Date(app.startDate).toLocaleDateString(),
-    endDate: new Date(app.endDate).toLocaleDateString(),
-    days: app.numberOfDays,
+    startDate: app.startDate ? new Date(app.startDate).toLocaleDateString() : 'N/A',
+    endDate: app.endDate ? new Date(app.endDate).toLocaleDateString() : 'N/A',
+    days: app.numberOfDays || 0,
     status: app.status,
     original: app
   }));
+
+  if (applicationsLoading) {
+    return (
+      <div className="leave-dashboard">
+        <div className="loading-container">
+          <div className="spinner"></div>
+          <p>Loading leave data...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="leave-dashboard">
@@ -230,7 +231,7 @@ const LeaveDashboard = () => {
           </div>
           <div className="stat-content">
             <h3>Total Leave Days</h3>
-            <p>{balance.reduce((sum, b) => sum + b.totalAllocation, 0)}</p>
+            <p>{balanceLoading ? '...' : balance.reduce((sum, b) => sum + (b.totalAllocation || 0), 0)}</p>
           </div>
         </div>
         
@@ -240,7 +241,7 @@ const LeaveDashboard = () => {
           </div>
           <div className="stat-content">
             <h3>Used Days</h3>
-            <p>{balance.reduce((sum, b) => sum + b.used, 0)}</p>
+            <p>{balanceLoading ? '...' : balance.reduce((sum, b) => sum + (b.used || 0), 0)}</p>
           </div>
         </div>
 
@@ -250,7 +251,7 @@ const LeaveDashboard = () => {
           </div>
           <div className="stat-content">
             <h3>Pending</h3>
-            <p>{stats.pending}</p>
+            <p>{balanceLoading ? '...' : balance.reduce((sum, b) => sum + (b.pending || 0), 0)}</p>
           </div>
         </div>
 
@@ -260,7 +261,7 @@ const LeaveDashboard = () => {
           </div>
           <div className="stat-content">
             <h3>Available Days</h3>
-            <p>{balance.reduce((sum, b) => sum + b.available, 0)}</p>
+            <p>{balanceLoading ? '...' : balance.reduce((sum, b) => sum + (b.available || 0), 0)}</p>
           </div>
         </div>
       </div>

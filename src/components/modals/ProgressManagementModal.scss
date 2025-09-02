@@ -1,0 +1,142 @@
+.current-progress-section {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #6439ff;
+
+  .badge {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+.progress-timeline {
+  .progress {
+    height: 8px;
+    border-radius: 4px;
+  }
+}
+
+.progress-steps {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-top: 0.5rem;
+
+  .progress-step {
+    text-align: center;
+    position: relative;
+    flex: 1;
+
+    small {
+      font-size: 0.75rem;
+      color: #6c757d;
+      font-weight: 500;
+    }
+
+    &.completed small {
+      color: #28a745;
+      font-weight: 600;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #dee2e6;
+    }
+
+    &.completed::before {
+      background: #28a745;
+    }
+  }
+}
+
+.modal-header {
+  background: linear-gradient(135deg, #6439ff 0%, #7c4dff 100%);
+  color: white;
+  border-bottom: none;
+
+  .modal-title {
+    font-weight: 600;
+  }
+
+  .btn-close {
+    filter: invert(1);
+  }
+}
+
+.form-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.form-select, .form-control {
+  border: 2px solid #e9ecef;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+
+  &:focus {
+    border-color: #6439ff;
+    box-shadow: 0 0 0 0.2rem rgba(100, 57, 255, 0.25);
+  }
+}
+
+.alert-info {
+  background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+  border: 1px solid #6439ff;
+  border-radius: 8px;
+  
+  strong {
+    color: #6439ff;
+  }
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #6439ff 0%, #7c4dff 100%);
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(100, 57, 255, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+.btn-secondary {
+  border-radius: 6px;
+  padding: 0.5rem 1.5rem;
+  font-weight: 600;
+}
+
+.text-muted {
+  font-size: 0.875rem;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .progress-steps {
+    .progress-step small {
+      font-size: 0.65rem;
+    }
+  }
+  
+  .modal-body {
+    padding: 1rem;
+  }
+}

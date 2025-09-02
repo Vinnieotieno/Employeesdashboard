@@ -6,12 +6,7 @@ import { useGetOrdersQuery} from '../../state/servicesApiSlice'
 import Loader from '../../components/Loader'
 
 const Row1 = () => {
-  const {data, isLoading, refetch} = useGetOrdersQuery()
-
-  useEffect(() =>{
-    refetch()
-
-  },[data])
+  const {data, isLoading} = useGetOrdersQuery()
 
   if(isLoading  || !data){
     return <Loader/>

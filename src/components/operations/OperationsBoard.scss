@@ -1,0 +1,252 @@
+.operations-board {
+  .operations-title {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .summary-card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .card-body {
+      padding: 1rem;
+      
+      h4 {
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+      }
+      
+      small {
+        color: #6c757d;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .operations-kanban {
+    margin-top: 2rem;
+    
+    .kanban-column {
+      padding: 0 0.5rem;
+      
+      .card {
+        border: none;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        
+        .card-header {
+          border-bottom: none;
+          padding: 0.75rem 1rem;
+          
+          h6 {
+            font-weight: 600;
+          }
+        }
+        
+        .kanban-body {
+          padding: 1rem;
+          max-height: 600px;
+          overflow-y: auto;
+          background-color: #f8f9fa;
+          
+          &::-webkit-scrollbar {
+            width: 6px;
+          }
+          
+          &::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+          }
+          
+          &::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+            
+            &:hover {
+              background: #a8a8a8;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .order-card {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    background: white;
+    
+    &:hover {
+      border-color: #007bff;
+      box-shadow: 0 2px 8px rgba(0,123,255,0.15);
+      transform: translateY(-1px);
+    }
+    
+    .card-body {
+      .card-title {
+        color: #2c3e50;
+        font-weight: 600;
+        line-height: 1.2;
+      }
+      
+      .card-text {
+        line-height: 1.2;
+      }
+      
+      .transport-icon {
+        color: #6c757d;
+        
+        svg {
+          font-size: 1rem;
+        }
+      }
+      
+      .order-details {
+        border-top: 1px solid #f1f3f4;
+        border-bottom: 1px solid #f1f3f4;
+        padding: 0.5rem 0;
+        margin: 0.5rem 0;
+      }
+      
+      .order-actions {
+        .btn {
+          border-radius: 4px;
+          
+          &:hover {
+            transform: scale(1.05);
+          }
+        }
+      }
+    }
+  }
+
+  // Modal customizations
+  .modal {
+    .modal-header {
+      background-color: #f8f9fa;
+      border-bottom: 1px solid #dee2e6;
+      
+      .modal-title {
+        color: #2c3e50;
+        font-weight: 600;
+      }
+    }
+    
+    .modal-body {
+      padding: 1.5rem;
+      
+      .form-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+      }
+      
+      .form-control, .form-select {
+        border-radius: 6px;
+        border: 1px solid #ced4da;
+        
+        &:focus {
+          border-color: #007bff;
+          box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+        }
+      }
+      
+      .form-check {
+        margin-top: 1rem;
+        
+        .form-check-label {
+          font-weight: 500;
+          color: #495057;
+        }
+      }
+    }
+    
+    .modal-footer {
+      background-color: #f8f9fa;
+      border-top: 1px solid #dee2e6;
+      padding: 1rem 1.5rem;
+      
+      .btn {
+        font-weight: 500;
+        border-radius: 6px;
+        padding: 0.5rem 1.5rem;
+      }
+    }
+  }
+
+  // Responsive design
+  @media (max-width: 1200px) {
+    .operations-kanban {
+      .kanban-column {
+        margin-bottom: 1rem;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .operations-kanban {
+      .kanban-column {
+        padding: 0 0.25rem;
+        
+        .kanban-body {
+          max-height: 400px;
+        }
+      }
+    }
+    
+    .order-card {
+      .card-body {
+        padding: 0.75rem;
+      }
+    }
+  }
+
+  // Animation for new cards
+  .order-card {
+    animation: slideIn 0.3s ease-out;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  // Loading states
+  .loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+  }
+
+  // Empty state
+  .empty-column {
+    text-align: center;
+    padding: 2rem;
+    color: #6c757d;
+    font-style: italic;
+  }
+}
+
+// Progress badge colors
+.badge {
+  &.bg-danger { background-color: #dc3545 !important; }
+  &.bg-warning { background-color: #ffc107 !important; color: #000 !important; }
+  &.bg-info { background-color: #17a2b8 !important; }
+  &.bg-primary { background-color: #007bff !important; }
+  &.bg-success { background-color: #28a745 !important; }
+  &.bg-dark { background-color: #343a40 !important; }
+}

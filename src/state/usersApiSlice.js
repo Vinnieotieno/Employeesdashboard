@@ -131,10 +131,18 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             body: data,
           })
     }),
+    getLeaveBalance: builder.query({
+        query: (userId) => `users/leave/balance/${userId || ''}`,
+        providesTags: ['LeaveBalance'],
+    }),
+    getLeaveStatistics: builder.query({
+        query: () => 'users/leave/statistics',
+        providesTags: ['LeaveStats'],
+    }),
     })
 })
 
 
 
 export const {useLoginMutation, useLogoutMutation, useRegisterMutation, useUpdateUserMutation, useLeaveApplicationMutation, useGetDepartmentsQuery, useGetUsersQuery, useDeleteUserMutation, useCreatePlanMutation, useGetPlansQuery, useGetSinglePlanQuery, useUpdatePlanMutation, useAddDriverMutation, useGetDriversQuery, useDeleteDriverMutation, useDeletePlanMutation, useUploadDocumentMutation, useAddEventMutation,
-useGetEventsQuery, useGetLeaveQuery, useApproveLeaveMutation} = usersApiSlice
+useGetEventsQuery, useGetLeaveQuery, useApproveLeaveMutation, useGetLeaveBalanceQuery, useGetLeaveStatisticsQuery} = usersApiSlice

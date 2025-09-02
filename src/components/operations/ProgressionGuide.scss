@@ -1,0 +1,476 @@
+// Import responsive utilities
+@import '../../style/responsive.scss';
+
+.progression-help-btn {
+  border-radius: 20px;
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.progression-guide-modal {
+  .modal-dialog {
+    max-width: 1200px;
+  }
+  
+  .modal-content {
+    border: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+  
+  .modal-header {
+    background: linear-gradient(135deg, #6439ff 0%, #4f46e5 100%);
+    color: white;
+    border-bottom: none;
+    
+    .modal-title {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+    
+    .btn-close {
+      filter: invert(1);
+    }
+  }
+  
+  .modal-body {
+    padding: 2rem;
+    
+    @include media-breakpoint-down(md) {
+      padding: 1.5rem;
+    }
+  }
+  
+  // Stage Navigation
+  .stage-nav-card {
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    
+    .card-header {
+      background: #f8f9fa;
+      border-bottom: 1px solid #dee2e6;
+      
+      h6 {
+        color: #495057;
+        font-weight: 600;
+      }
+    }
+    
+    .stage-nav-item {
+      padding: 1rem;
+      border-bottom: 1px solid #f8f9fa;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        background: rgba(100, 57, 255, 0.05);
+      }
+      
+      &.active {
+        background: rgba(100, 57, 255, 0.1);
+        border-left: 4px solid #6439ff;
+      }
+      
+      .stage-nav-content {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        
+        .stage-icon {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          
+          svg {
+            font-size: 20px;
+            color: white;
+          }
+        }
+        
+        .stage-info {
+          flex: 1;
+          
+          .stage-name {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.25rem;
+          }
+          
+          .stage-duration {
+            font-size: 0.8rem;
+            color: #6c757d;
+          }
+        }
+        
+        .stage-number {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: #6439ff;
+          color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.8rem;
+          font-weight: 600;
+        }
+      }
+      
+      // Stage-specific colors
+      &.stage-secondary .stage-icon {
+        background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+      }
+      
+      &.stage-info .stage-icon {
+        background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%);
+      }
+      
+      &.stage-warning .stage-icon {
+        background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+      }
+      
+      &.stage-primary .stage-icon {
+        background: linear-gradient(135deg, #6439ff 0%, #4f46e5 100%);
+      }
+      
+      &.stage-success .stage-icon {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      }
+    }
+  }
+  
+  // Stage Details
+  .stage-details-card {
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    
+    .stage-header {
+      border-bottom: 1px solid #dee2e6;
+      padding: 1.5rem;
+      
+      .stage-icon-large {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        
+        svg {
+          font-size: 28px;
+          color: white;
+        }
+      }
+      
+      h5 {
+        color: white;
+        font-weight: 600;
+        margin: 0;
+      }
+      
+      small {
+        color: rgba(255, 255, 255, 0.8);
+      }
+      
+      // Stage-specific header colors
+      &.stage-secondary {
+        background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        
+        .stage-icon-large {
+          background: rgba(255, 255, 255, 0.2);
+        }
+      }
+      
+      &.stage-info {
+        background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%);
+        
+        .stage-icon-large {
+          background: rgba(255, 255, 255, 0.2);
+        }
+      }
+      
+      &.stage-warning {
+        background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+        color: #000 !important;
+        
+        .stage-icon-large {
+          background: rgba(0, 0, 0, 0.1);
+          
+          svg {
+            color: #000;
+          }
+        }
+        
+        h5, small {
+          color: #000 !important;
+        }
+      }
+      
+      &.stage-primary {
+        background: linear-gradient(135deg, #6439ff 0%, #4f46e5 100%);
+        
+        .stage-icon-large {
+          background: rgba(255, 255, 255, 0.2);
+        }
+      }
+      
+      &.stage-success {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        
+        .stage-icon-large {
+          background: rgba(255, 255, 255, 0.2);
+        }
+      }
+    }
+    
+    .card-body {
+      padding: 2rem;
+      
+      h6 {
+        color: #6439ff;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #6439ff;
+      }
+      
+      .stage-description p {
+        font-size: 1.1rem;
+        color: #495057;
+        line-height: 1.6;
+      }
+      
+      .what-happens ul {
+        list-style: none;
+        padding: 0;
+        
+        li {
+          padding: 0.5rem 0;
+          padding-left: 2rem;
+          position: relative;
+          color: #495057;
+          
+          &:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+          }
+        }
+      }
+      
+      .involved-tags {
+        .badge {
+          font-size: 0.8rem;
+          padding: 0.5rem 0.75rem;
+          border: 1px solid #dee2e6;
+        }
+      }
+      
+      .next-step-text {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid #6439ff;
+        margin: 0;
+        font-style: italic;
+      }
+      
+      .example-box {
+        background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e1bee7;
+        
+        p {
+          margin: 0;
+          color: #4a148c;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+  
+  // Flow Visualization
+  .flow-visualization {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    
+    @include media-breakpoint-down(lg) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .flow-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      flex: 1;
+      min-width: 120px;
+      
+      @include media-breakpoint-down(lg) {
+        flex-direction: row;
+        text-align: left;
+        justify-content: flex-start;
+        gap: 1rem;
+      }
+      
+      .flow-stage-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.5rem;
+        transition: all 0.3s ease;
+        
+        @include media-breakpoint-down(lg) {
+          margin-bottom: 0;
+        }
+        
+        svg {
+          font-size: 24px;
+          color: white;
+        }
+        
+        &.active {
+          transform: scale(1.1);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        // Stage-specific colors
+        &.stage-secondary {
+          background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        }
+        
+        &.stage-info {
+          background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%);
+        }
+        
+        &.stage-warning {
+          background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+          
+          svg {
+            color: #000;
+          }
+        }
+        
+        &.stage-primary {
+          background: linear-gradient(135deg, #6439ff 0%, #4f46e5 100%);
+        }
+        
+        &.stage-success {
+          background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+      }
+      
+      .flow-stage-info {
+        .flow-stage-name {
+          font-weight: 600;
+          color: #495057;
+          margin-bottom: 0.25rem;
+        }
+        
+        .flow-stage-duration {
+          font-size: 0.8rem;
+          color: #6c757d;
+        }
+      }
+    }
+    
+    .flow-arrow {
+      color: #6c757d;
+      margin: 0 0.5rem;
+      
+      @include media-breakpoint-down(lg) {
+        transform: rotate(90deg);
+        margin: 0.5rem 0;
+      }
+      
+      svg {
+        font-size: 20px;
+      }
+    }
+  }
+  
+  // Feature Cards
+  .feature-card {
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    
+    .card-header {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-bottom: 1px solid #dee2e6;
+      
+      h6 {
+        color: #495057;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+      }
+    }
+    
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      
+      li {
+        padding: 0.5rem 0;
+        padding-left: 1.5rem;
+        position: relative;
+        color: #495057;
+        border-bottom: 1px solid #f8f9fa;
+        
+        &:last-child {
+          border-bottom: none;
+        }
+        
+        &:before {
+          content: '•';
+          position: absolute;
+          left: 0;
+          color: #6439ff;
+          font-weight: bold;
+          font-size: 1.2rem;
+        }
+      }
+    }
+  }
+  
+  // Responsive adjustments
+  @include media-breakpoint-down(md) {
+    .modal-body {
+      .row {
+        margin: 0;
+        
+        .col-md-4, .col-md-8, .col-md-6 {
+          padding: 0.5rem;
+        }
+      }
+      
+      .stage-nav-card, .stage-details-card {
+        margin-bottom: 1rem;
+      }
+      
+      .stage-details-card .card-body {
+        padding: 1.5rem;
+      }
+    }
+  }
+}

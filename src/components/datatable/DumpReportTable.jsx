@@ -33,15 +33,13 @@ const getWorkingDaysInMonth = (year, month) => {
 
 const DumpReportTable = () => {
     const {userInfo} = useSelector(state => state.auth)
-    const { data, isLoading, refetch} = useGetOrdersQuery();
+    const { data, isLoading} = useGetOrdersQuery();
     const [exchangeRates, setExchangeRates] = useState({});
-    const { data:ExchangeRateData, isLoading:Loading, refetch: updating} = useGetExchangeRatesQuery();
+    const { data:ExchangeRateData, isLoading:Loading} = useGetExchangeRatesQuery();
     const navigate = useNavigate();
     const params = useParams()
 
     useEffect(() => {
-        refetch();
-        updating()
         if(ExchangeRateData?.length > 0){
           const formattedExchangeRates = {
             USD: ExchangeRateData[0]?.USD || 0,
@@ -50,7 +48,7 @@ const DumpReportTable = () => {
           };
           setExchangeRates(formattedExchangeRates);
         }
-      }, [data, ExchangeRateData]);
+      }, [ExchangeRateData]);
 
       if (isLoading || !data) {
         return <Loader />;

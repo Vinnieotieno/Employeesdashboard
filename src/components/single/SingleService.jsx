@@ -4,11 +4,13 @@ import Sidebar from '../sidebar/Sidebar';
 import Navigation from '../navbar/Navigation';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Loader from '../Loader';
-import { useDeleteOrAbortQuoteMutation, useGetSingleOrderQuery, useSendQuoteMutation, useUploadQuoteDocumentMutation, useUpdateServiceMutation, useGetExchangeRatesQuery, useAssignDriverMutation} from '../../state/servicesApiSlice'; 
+import { useDeleteOrAbortQuoteMutation, useGetSingleOrderQuery, useSendQuoteMutation, useUploadQuoteDocumentMutation, useUpdateServiceMutation, useGetExchangeRatesQuery, useAssignDriverMutation} from '../../state/servicesApiSlice';
 import { useGetDriversQuery } from '../../state/usersApiSlice';
-import { Button, Dropdown, Form, Row, Col } from 'react-bootstrap';
+import { Button, Dropdown, Form, Row, Col, Card, Badge } from 'react-bootstrap';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import SendIcon from '@mui/icons-material/Send';
+import ProgressTimeline from '../timeline/ProgressTimeline';
+import ProgressManagementModal from '../modals/ProgressManagementModal';
 import EditIcon from '@mui/icons-material/Edit';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import {toast} from 'react-toastify'
@@ -38,8 +40,9 @@ const SingleService = () => {
     const [revenue, setRevenue] = useState('');
     const [operationalExpense, setOperationalExpense] = useState('');
     const [nonOperationalExpense, setNonOperationalExpense] = useState('');
+    const [showProgressModal, setShowProgressModal] = useState(false);
     const [updateService] = useUpdateServiceMutation()
-    const { data:ExchangeRateData, isLoading:Loading, refetch: updating} = useGetExchangeRatesQuery();
+    const { data:ExchangeRateData, isLoading:Loading} = useGetExchangeRatesQuery();
     const [exchangeRates, setExchangeRates] = useState({});
     const [driver, setDriver] = useState('')
     const {data:drivers, refetch:RefetchingDriver} = useGetDriversQuery()
@@ -62,22 +65,23 @@ const SingleService = () => {
       };
 
     useEffect(()=>{
-        refetch()
-        RefetchingDriver()
         if(data){
             setRevenue(data?.revenue)
             setOperationalExpense(data?.operationalExpense)
             setNonOperationalExpense(data?.nonOperationalExpense)
-            if(ExchangeRateData?.length > 0){
-                const formattedExchangeRates = {
-                  USD: ExchangeRateData[0]?.USD || 0,
-                  EUR: ExchangeRateData[0]?.EUR || 0,
-                  Pound: ExchangeRateData[0]?.Pound || 0,
-                };
-                setExchangeRates(formattedExchangeRates);
-              }
         }
     },[data])
+
+    useEffect(() => {
+        if(ExchangeRateData?.length > 0){
+            const formattedExchangeRates = {
+              USD: ExchangeRateData[0]?.USD || 0,
+              EUR: ExchangeRateData[0]?.EUR || 0,
+              Pound: ExchangeRateData[0]?.Pound || 0,
+            };
+            setExchangeRates(formattedExchangeRates);
+          }
+    }, [ExchangeRateData])
 
   
 
@@ -220,7 +224,12 @@ const handleSubmit = (event) => {
     }).catch(err =>{
         toast.error(err?.message || err?.data?.message)
     })
-    
+
+  }
+
+  const handleProgressUpdate = () => {
+    // Refetch the order data to get updated progress
+    refetch();
   }
 
     return (
@@ -304,9 +313,67 @@ const handleSubmit = (event) => {
                                 <li>Origin: <b>{data.origin}</b></li>
                                 <li>Destination: <b>{data.destination}</b></li>
                                 <li>Mode of Transport: <b>{data.transport}</b></li>
-                                <li>Status: <b>{data.status}</b></li>
-                                <li>Progress: <b>{data.progress}</b></li>
+                                <li>Status: <b>
+                                    <Badge bg={data.status === 'Approved' ? 'success' : data.status === 'Pending' ? 'warning' : 'danger'}>
+                                        {data.status}
+                                    </Badge>
+                                </b></li>
+                                <li>Progress: <b>
+                                    <Badge bg={
+                                        data.progress === 'Initial' ? 'danger' :
+                                        data.progress === 'On Transit' ? 'warning' :
+                                        data.progress === 'Arrived' ? 'info' :
+                                        data.progress === 'Clearance' ? 'primary' :
+                                        data.progress === 'Delivery' ? 'success' : 'secondary'
+                                    }>
+                                        {data.progress || 'Not Set'}
+                                    </Badge>
+                                </b></li>
                             </ul>
+
+                            {/* Progress Management Section */}
+                            {data.status === 'Approved' && (
+                                <div className="progress-management-section mt-4">
+                                    <Card className="progress-card">
+                                        <Card.Header className="d-flex justify-content-between align-items-center">
+                                            <h5 className="mb-0">Order Progress Management</h5>
+                                            <Button
+                                                variant="primary"
+                                                size="sm"
+                                                onClick={() => setShowProgressModal(true)}
+                                            >
+                                                Update Progress
+                                            </Button>
+                                        </Card.Header>
+                                        <Card.Body>
+                                            <ProgressTimeline
+                                                currentProgress={data.progress}
+                                                orderData={data}
+                                                compact={true}
+                                            />
+                                        </Card.Body>
+                                    </Card>
+                                </div>
+                            )}
+
+                            {/* Full Progress Timeline Section */}
+                            {data.status === 'Approved' && (
+                                <div className="full-progress-timeline mt-5">
+                                    <Card>
+                                        <Card.Header>
+                                            <h5 className="mb-0">Detailed Progress Timeline</h5>
+                                        </Card.Header>
+                                        <Card.Body>
+                                            <ProgressTimeline
+                                                currentProgress={data.progress}
+                                                orderData={data}
+                                                compact={false}
+                                            />
+                                        </Card.Body>
+                                    </Card>
+                                </div>
+                            )}
+
                             {data?.progress === 'Delivery' ? <div className="mt-5">
                         <h1 className="text-center">Assign Driver <small style={{fontSize:'14px', color:'#666'}}>(If Applicable)</small></h1>
                         <Form onSubmit={assignDriverFunction}>
@@ -491,6 +558,14 @@ const handleSubmit = (event) => {
                     </div>}
                 </div>
             </div>
+
+            {/* Progress Management Modal */}
+            <ProgressManagementModal
+                show={showProgressModal}
+                onHide={() => setShowProgressModal(false)}
+                orderData={data}
+                onProgressUpdate={handleProgressUpdate}
+            />
         </div>
     );
 }

@@ -1,0 +1,412 @@
+// Import responsive utilities
+@import '../../style/responsive.scss';
+
+.notification-system {
+  position: relative;
+  
+  .notification-bell {
+    position: relative;
+    
+    .notification-trigger {
+      position: relative;
+      padding: 8px;
+      border: none;
+      background: transparent;
+      color: #6c757d;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        color: #6439ff;
+        background: rgba(100, 57, 255, 0.1);
+        border-radius: 50%;
+      }
+      
+      .notification-icon {
+        font-size: 24px;
+        transition: all 0.3s ease;
+        
+        &.active {
+          color: #6439ff;
+          animation: pulse 2s infinite;
+        }
+      }
+      
+      .notification-count {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 0.7rem;
+        padding: 0.2rem 0.4rem;
+        border-radius: 50%;
+        min-width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: bounce 0.5s ease-in-out;
+      }
+    }
+    
+    .notifications-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 400px;
+      max-height: 600px;
+      z-index: 1050;
+      border: none;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      overflow: hidden;
+      
+      @include media-breakpoint-down(md) {
+        width: 320px;
+        right: -50px;
+      }
+      
+      @include media-breakpoint-down(sm) {
+        width: 280px;
+        right: -100px;
+      }
+      
+      .card-header {
+        background: linear-gradient(135deg, #6439ff 0%, #4f46e5 100%);
+        color: white;
+        border-bottom: none;
+        padding: 1rem;
+        
+        h6 {
+          margin: 0;
+          font-weight: 600;
+        }
+        
+        .header-actions {
+          display: flex;
+          align-items: center;
+          
+          .btn-link {
+            color: white;
+            padding: 0.25rem;
+            
+            &:hover {
+              color: rgba(255, 255, 255, 0.8);
+            }
+            
+            svg {
+              font-size: 18px;
+            }
+          }
+        }
+      }
+      
+      .notifications-body {
+        padding: 0;
+        max-height: 500px;
+        overflow-y: auto;
+        
+        .no-notifications {
+          text-align: center;
+          padding: 2rem;
+          color: #6c757d;
+          
+          .empty-icon {
+            font-size: 48px;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+          }
+          
+          p {
+            margin: 0;
+            font-style: italic;
+          }
+        }
+        
+        .list-group {
+          .notification-item {
+            border: none;
+            border-bottom: 1px solid #f8f9fa;
+            padding: 0;
+            
+            &.unread {
+              background: linear-gradient(135deg, rgba(100, 57, 255, 0.05) 0%, rgba(255, 255, 255, 1) 100%);
+              border-left: 3px solid #6439ff;
+            }
+            
+            &:hover {
+              background: #f8f9fa;
+            }
+            
+            .notification-content {
+              padding: 1rem;
+              
+              .notification-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-bottom: 0.5rem;
+                
+                .notification-icon {
+                  margin-right: 0.5rem;
+                  
+                  svg {
+                    font-size: 20px;
+                  }
+                }
+                
+                .notification-meta {
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                  
+                  .badge {
+                    font-size: 0.65rem;
+                    padding: 0.2rem 0.4rem;
+                  }
+                  
+                  .time-ago {
+                    color: #6c757d;
+                    font-size: 0.75rem;
+                  }
+                }
+              }
+              
+              .notification-body {
+                margin-bottom: 0.5rem;
+                
+                .notification-message {
+                  margin: 0;
+                  font-size: 0.9rem;
+                  color: #495057;
+                  line-height: 1.4;
+                }
+                
+                .notification-details {
+                  color: #6c757d;
+                  font-size: 0.8rem;
+                  display: block;
+                  margin-top: 0.25rem;
+                }
+              }
+              
+              .notification-actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 0.5rem;
+                
+                .btn-link {
+                  padding: 0.25rem 0.5rem;
+                  font-size: 0.75rem;
+                  
+                  &.text-danger {
+                    color: #dc3545 !important;
+                    
+                    &:hover {
+                      color: #c82333 !important;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        
+        .view-all {
+          text-align: center;
+          padding: 1rem;
+          border-top: 1px solid #f8f9fa;
+          
+          .btn-link {
+            color: #6439ff;
+            font-size: 0.875rem;
+            
+            &:hover {
+              color: #4f46e5;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  // Modal customizations
+  .modal {
+    .modal-content {
+      border: none;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .modal-header {
+      background: linear-gradient(135deg, #6439ff 0%, #4f46e5 100%);
+      color: white;
+      border-bottom: none;
+      
+      .modal-title {
+        font-weight: 600;
+      }
+      
+      .btn-close {
+        filter: invert(1);
+      }
+    }
+    
+    .modal-body {
+      padding: 2rem;
+      
+      h6 {
+        color: #6439ff;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #6439ff;
+      }
+      
+      .form-check {
+        .form-check-input {
+          &:checked {
+            background-color: #6439ff;
+            border-color: #6439ff;
+          }
+          
+          &:focus {
+            box-shadow: 0 0 0 0.2rem rgba(100, 57, 255, 0.25);
+          }
+        }
+        
+        .form-check-label {
+          font-weight: 500;
+          color: #495057;
+        }
+      }
+    }
+    
+    .modal-footer {
+      border-top: 1px solid #e9ecef;
+      padding: 1rem 2rem;
+      
+      .btn-primary {
+        background: linear-gradient(135deg, #6439ff 0%, #4f46e5 100%);
+        border: none;
+        
+        &:hover {
+          background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+        }
+      }
+    }
+  }
+  
+  // Animations
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes bounce {
+    0%, 20%, 53%, 80%, 100% {
+      transform: translate3d(0, 0, 0);
+    }
+    40%, 43% {
+      transform: translate3d(0, -8px, 0);
+    }
+    70% {
+      transform: translate3d(0, -4px, 0);
+    }
+    90% {
+      transform: translate3d(0, -2px, 0);
+    }
+  }
+  
+  // Responsive adjustments
+  @include media-breakpoint-down(md) {
+    .notification-bell {
+      .notifications-dropdown {
+        .notifications-body {
+          .notification-item {
+            .notification-content {
+              padding: 0.75rem;
+              
+              .notification-header {
+                .notification-meta {
+                  flex-direction: column;
+                  align-items: flex-end;
+                  gap: 0.25rem;
+                }
+              }
+              
+              .notification-body {
+                .notification-message {
+                  font-size: 0.85rem;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  @include media-breakpoint-down(sm) {
+    .notification-bell {
+      .notification-trigger {
+        .notification-icon {
+          font-size: 20px;
+        }
+        
+        .notification-count {
+          font-size: 0.65rem;
+          min-width: 16px;
+          height: 16px;
+        }
+      }
+      
+      .notifications-dropdown {
+        .notifications-body {
+          max-height: 400px;
+          
+          .notification-item {
+            .notification-content {
+              padding: 0.5rem;
+              
+              .notification-header {
+                .notification-icon svg {
+                  font-size: 18px;
+                }
+              }
+              
+              .notification-actions {
+                .btn-link {
+                  font-size: 0.7rem;
+                  padding: 0.2rem 0.4rem;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  // Scrollbar customization
+  .notifications-body::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .notifications-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  .notifications-body::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+    
+    &:hover {
+      background: #a8a8a8;
+    }
+  }
+}

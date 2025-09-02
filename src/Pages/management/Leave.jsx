@@ -15,12 +15,28 @@ const Leave = () => {
 
   const [approveLeave] = useApproveLeaveMutation()
 
-  useEffect(() =>{
-    refetch()
-  },[data])
+  // Remove the infinite loop - useGetLeaveQuery already handles data fetching
+  // useEffect(() =>{
+  //   refetch()
+  // },[data])
 
-  if(isLoading || !data){
+  if(isLoading){
     return  <Loader/>
+  }
+
+  if(!data || data.length === 0){
+    return (
+      <div className='leave'>
+        <Sidebar/>
+        <div className="leaveBody">
+          <Navigation/>
+          <h4 className="text-center">Leave Applications</h4>
+          <div className="text-center mt-4">
+            <p>No leave applications found.</p>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   let columns = [
@@ -35,7 +51,7 @@ const Leave = () => {
   renderCell: (params) => {
     console.log(params)
     const isCurrentUser = params.row.id === userInfo._id;
-    const isManagement = userInfo.department === 'Management' && params.row.status === 'Not Approved'
+    const isManagement = userInfo.department === 'Management' && params.row.status === 'Pending'
     
     if (isCurrentUser) {
       return null; 
@@ -56,21 +72,22 @@ const Leave = () => {
 
   
 
-  const rows = data?.map((item) => ({
-    id: item._id,
-    appliedBy: item?.appliedBy?.username,
-    leaveType: item.leaveType,
-    reason: item.reason,
-    startDate: new Date(item.startDate).toLocaleDateString(),
-    endDate: new Date(item.endDate).toLocaleDateString(),
-    status: item.status,
-  }));
+  const rows = data?.map((item, index) => ({
+    id: item._id || `temp-${index}`,
+    appliedBy: item?.appliedBy?.username || item?.appliedBy?.fname || 'Unknown User',
+    leaveType: item.leaveType || 'N/A',
+    reason: item.reason || 'No reason provided',
+    startDate: item.startDate ? new Date(item.startDate).toLocaleDateString() : 'N/A',
+    endDate: item.endDate ? new Date(item.endDate).toLocaleDateString() : 'N/A',
+    status: item.status || 'Pending',
+  })) || [];
 
 
   console.log(data)
   const handleChangeStatus = async(id) =>{
     approveLeave({id}).unwrap().then(res =>{
       toast.success(res?.message)
+      refetch() // Refetch data after successful approval
     }).catch(err =>{
       toast.error(err?.message || err?.data?.message)
     })
@@ -85,7 +102,31 @@ const Leave = () => {
             <Navigation/>
 
             <h4 className="text-center">Leave Applications</h4>
-            <DataGrid rows={rows} columns={columns} pageSize={5}  />
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              pageSize={5}
+              rowsPerPageOptions={[5, 10, 20]}
+              disableSelectionOnClick
+              autoHeight
+              sx={{
+                '& .MuiDataGrid-root': {
+                  border: 'none',
+                },
+                '& .MuiDataGrid-cell': {
+                  borderBottom: 'none',
+                },
+                '& .MuiDataGrid-columnHeaders': {
+                  backgroundColor: '#f5f5f5',
+                  color: '#333',
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                },
+                '& .MuiDataGrid-virtualScroller': {
+                  backgroundColor: '#fff',
+                },
+              }}
+            />
 
         </div>
     </div>
